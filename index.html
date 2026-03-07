@@ -246,8 +246,22 @@ const GIVEN_NAMES = [
   {h:"하영",r:"hayoung",s:["ha","young"],n:"hy"},
   {h:"선미",r:"sunmi",s:["sun","mi"],n:"sm"},
   {h:"소미",r:"somi",s:["so","mi"],n:"sm"},
-  {h:"아이",r:"ai",s:["a","i"],n:"ai"},
   {h:"나현",r:"nahyeon",s:["na","hyeon"],n:"nh"},
+  {h:"보라",r:"bora",s:["bo","ra"],n:"br"},
+  {h:"수진",r:"sujin",s:["su","jin"],n:"sj"},
+  {h:"혜진",r:"hyejin",s:["hye","jin"],n:"hj"},
+  {h:"지선",r:"jiseon",s:["ji","seon"],n:"js"},
+  {h:"민지",r:"minji",s:["min","ji"],n:"mj"},
+  {h:"수연",r:"suyeon",s:["su","yeon"],n:"sy"},
+  {h:"예지",r:"yeji",s:["ye","ji"],n:"yj"},
+  {h:"현지",r:"hyeonji",s:["hyeon","ji"],n:"hj"},
+  {h:"세연",r:"seyeon",s:["se","yeon"],n:"sy"},
+  {h:"아현",r:"ahyeon",s:["a","hyeon"],n:"ah"},
+  {h:"주아",r:"jua",s:["ju","a"],n:"ja"},
+  {h:"리아",r:"ria",s:["ri","a"],n:"ra"},
+  {h:"솔이",r:"sori",s:["so","ri"],n:"sr"},
+  {h:"아인",r:"ain",s:["a","in"],n:"ai"},
+  {h:"채아",r:"chaea",s:["chae","a"],n:"ca"},
   // 남자 이름
   {h:"민준",r:"minjun",s:["min","jun"],n:"mj"},
   {h:"지호",r:"jiho",s:["ji","ho"],n:"jh"},
@@ -284,6 +298,16 @@ const GIVEN_NAMES = [
   {h:"유찬",r:"yuchan",s:["yu","chan"],n:"yc"},
   {h:"정원",r:"jeongwon",s:["jeong","won"],n:"jw"},
   {h:"건우",r:"geonwoo",s:["geon","woo"],n:"gw"},
+  {h:"태호",r:"taeho",s:["tae","ho"],n:"th"},
+  {h:"준호",r:"junho",s:["jun","ho"],n:"jh"},
+  {h:"민규",r:"mingyu",s:["min","gyu"],n:"mg"},
+  {h:"성준",r:"sungjun",s:["sung","jun"],n:"sj"},
+  {h:"재호",r:"jaeho",s:["jae","ho"],n:"jh"},
+  {h:"상현",r:"sanghyeon",s:["sang","hyeon"],n:"sh"},
+  {h:"도훈",r:"dohun",s:["do","hun"],n:"dh"},
+  {h:"민성",r:"minseong",s:["min","seong"],n:"ms"},
+  {h:"찬영",r:"chanyeong",s:["chan","yeong"],n:"cy"},
+  {h:"영준",r:"yeongjun",s:["yeong","jun"],n:"yj"},
   // 중성적 이름
   {h:"시온",r:"sion",s:["si","on"],n:"so"},
   {h:"새봄",r:"saebyeom",s:["sae","byeom"],n:"sb"},
@@ -298,6 +322,11 @@ const GIVEN_NAMES = [
   {h:"이슬",r:"isul",s:["i","sul"],n:"is"},
   {h:"파랑",r:"parang",s:["pa","rang"],n:"pr"},
   {h:"봄비",r:"bombi",s:["bom","bi"],n:"bb"},
+  {h:"해온",r:"haeon",s:["hae","on"],n:"ho"},
+  {h:"라온",r:"raon",s:["ra","on"],n:"ro"},
+  {h:"바온",r:"baon",s:["ba","on"],n:"bo"},
+  {h:"율",r:"yul",s:["yul"],n:"yl"},
+  {h:"담이",r:"dami",s:["da","mi"],n:"dm"},
 ];
 
 // 한국어 단어/별명
@@ -319,6 +348,48 @@ const KR_WORDS = [
   {h:"소녀",r:"sonyeo"}, {h:"소년",r:"sonyeon"}, {h:"천사",r:"cheonsa"},
   {h:"요정",r:"yojeong"}, {h:"달빛",r:"dalbit"}, {h:"별빛",r:"byeolbit"},
   {h:"보름달",r:"boreumdal"}, {h:"새벽별",r:"saebyeokbyeol"},
+  // 추가
+  {h:"두근",r:"dugeun"}, {h:"설설",r:"seolseol"}, {h:"몽글",r:"monggeul"},
+  {h:"뭉클",r:"mungkeul"}, {h:"반짝",r:"banjjak"}, {h:"찰랑",r:"challang"},
+  {h:"포근",r:"pogeun"}, {h:"아늑",r:"aneuk"}, {h:"보드",r:"bodeu"},
+  {h:"눈부심",r:"nunbusim"}, {h:"황홀",r:"hwanghol"}, {h:"몽환",r:"monghwan"},
+  {h:"순간",r:"sungan"}, {h:"인연",r:"inyeon"}, {h:"운명",r:"unmyeong"},
+  {h:"축복",r:"chukbok"}, {h:"희망",r:"huimang"}, {h:"기적",r:"gijeok"},
+  {h:"소소",r:"soso"}, {h:"담담",r:"damdam"}, {h:"잔잔",r:"janijan"},
+  {h:"살랑",r:"sallang"}, {h:"알콩",r:"alkong"}, {h:"달콩",r:"dalkong"},
+  {h:"따숩",r:"ttasup"}, {h:"뽀송",r:"bbosong"}, {h:"몽몽",r:"mongmong"},
+  {h:"냥이",r:"nyangi"}, {h:"강쥐",r:"gangjwi"}, {h:"호랑이",r:"horangi"},
+  {h:"토끼",r:"tokki"}, {h:"고양이",r:"goyangi"}, {h:"판다",r:"panda"},
+  {h:"코알라",r:"koala"}, {h:"햄스터",r:"hamster"}, {h:"다람쥐",r:"daramjwi"},
+  {h:"봉봉",r:"bongbong"}, {h:"퐁당",r:"pongdang"}, {h:"퐁퐁",r:"pongpong"},
+  {h:"방실",r:"bangsil"}, {h:"통통",r:"tongtong"}, {h:"콩콩",r:"kongkong"},
+  {h:"솔솔",r:"solsol"}, {h:"봄봄",r:"bombom"}, {h:"꼬마",r:"kkoma"},
+];
+
+// 닉네임 (별명) — 실제 이름 아닌 귀여운 닉네임
+const NICKNAMES = [
+  {h:"뿡뿡이",r:"bbungbbung"}, {h:"곰돌이",r:"gomdori"}, {h:"냥냥이",r:"nyangnyang"},
+  {h:"멍멍이",r:"meongmeong"}, {h:"귀염둥이",r:"gwiyeomdungi"}, {h:"깜찍이",r:"kkamjjiki"},
+  {h:"두부",r:"dubu"}, {h:"치즈",r:"chijeu"}, {h:"초코",r:"choko"},
+  {h:"푸딩",r:"puding"}, {h:"솜이",r:"somi"}, {h:"뭉치",r:"munchi"},
+  {h:"뚱이",r:"ttungi"}, {h:"쫑이",r:"jjongi"}, {h:"콩이",r:"kongi"},
+  {h:"팥이",r:"pati"}, {h:"밤이",r:"bami"}, {h:"호두",r:"hodu"},
+  {h:"쑥이",r:"ssuki"}, {h:"진달래",r:"jindalrae"}, {h:"쑥쑥",r:"ssukssuk"},
+  {h:"뽀미",r:"bbomi"}, {h:"뽀뽀",r:"bbobbo"}, {h:"쭈쭈",r:"jjujju"},
+  {h:"루루",r:"ruru"}, {h:"미미",r:"mimi"}, {h:"나나",r:"nana"},
+  {h:"모모",r:"momo"}, {h:"코코",r:"koko"}, {h:"망고",r:"mango"},
+  {h:"딸기",r:"ttalgi"}, {h:"복숭아",r:"boksungah"}, {h:"수박",r:"subak"},
+  {h:"참외",r:"chamoe"}, {h:"레몬",r:"remon"}, {h:"자두",r:"jadu"},
+  {h:"앵두",r:"aengdu"}, {h:"포도",r:"podo"}, {h:"키위",r:"kiwi"},
+  {h:"바나나",r:"banana"}, {h:"파인애플",r:"painaepeul"}, {h:"블루베리",r:"blueberry"},
+  {h:"코뿔소",r:"kopulso"}, {h:"하마",r:"hama"}, {h:"기린",r:"girin"},
+  {h:"고슴도치",r:"goseumdochi"}, {h:"너구리",r:"neoguri"}, {h:"여우",r:"yeou"},
+  {h:"부엉이",r:"bueongyi"}, {h:"펭귄",r:"penggwin"}, {h:"물개",r:"mulgae"},
+  {h:"바다사자",r:"badasaja"}, {h:"돌고래",r:"dolgorae"}, {h:"복어",r:"bogeo"},
+  {h:"금붕어",r:"geumbungeo"}, {h:"문어",r:"muneo"}, {h:"고등어",r:"godeungeo"},
+  {h:"떡볶이",r:"tteokbokki"}, {h:"순대",r:"sundae"}, {h:"김밥",r:"gimbap"},
+  {h:"라면",r:"ramyeon"}, {h:"삼겹살",r:"samgyeopsal"}, {h:"치킨",r:"chikin"},
+  {h:"탕수육",r:"tangsooyuk"}, {h:"짜장면",r:"jjajangmyeon"}, {h:"만두",r:"mandu"},
 ];
 
 // 영어 단어 — 한국인이 실제로 쓰는 단어 위주, 이질적 서양 이름 제외
@@ -342,6 +413,44 @@ const ENG_WORDS = [
   // 기타
   "honey","baby","bebe","mini","pink","fairy","dream","magic","angel","pop",
   "coco","silk","tea","key","vine","pin","glam","charm","whim","daze",
+  // 동물 추가
+  "otter","penguin","hamster","pigeon","raven","gecko","newt","vole","mink","ibis",
+  // 음식 추가
+  "matcha","sorbet","toffee","nougat","praline","truffle","ganache","madeleine",
+  // 자연 추가
+  "petal","thorn","fern","moss","reed","brine","flint","crest","vale","glen",
+  // 색감/느낌
+  "indigo","sienna","ochre","teal","slate","taupe","ecru","buff","khaki","bisque",
+  // 행동/상태
+  "drift","float","hush","lull","doze","meow","purr","yawn","nap","wink",
+];
+
+// 랜덤 음절 풀 — 한국어 발음 패턴 기반
+const KR_SYLLS = [
+  "ga","gi","go","gu","ge","gyo","gyu","gwa","gwi",
+  "na","ni","no","nu","ne","nya","nyo","nyu",
+  "da","di","do","du","de","dyo","dyu",
+  "ra","ri","ro","ru","re","ryo","ryu",
+  "ma","mi","mo","mu","me","myo","myu",
+  "ba","bi","bo","bu","be","byo","byu",
+  "sa","si","so","su","se","syo","syu",
+  "a","i","o","u","e","ya","yo","yu","yeo",
+  "ja","ji","jo","ju","je","jyo","jyu",
+  "cha","chi","cho","chu","che",
+  "ka","ki","ko","ku","ke",
+  "ta","ti","to","tu","te",
+  "pa","pi","po","pu","pe",
+  "ha","hi","ho","hu","he","hyo","hyu",
+  "san","min","jun","bin","won","han","rin","sol","yun","jin",
+  "seon","yeon","hyeon","chan","ran","man","dan","ban","pan",
+  "gam","bam","ram","jam","ham","sam","dam","nam",
+  "gong","dong","song","bong","hong","jong",
+  "gang","bang","rang","jang","hang","sang","dang","nang",
+  "sin","bin","rin","min","jin","din",
+  "sul","mul","bul","rul","jul","pul","nul","gul",
+  "tok","bok","rok","mok","dok","nok","gok","jok",
+  "tal","bal","ral","mal","dal","nal","gal","jal","sal",
+  "tam","bam","ram","jam","gam","nam","sam",
 ];
 
 // 감성 접미어
@@ -634,6 +743,44 @@ function stratSyllableMix(fam, given) {
   return { id: cleanId(rand(variants)()), label: fam.h + " " + given.h };
 }
 
+// 전략 8: 닉네임 기반
+// bbungbbung972  gomdori.98  choko__kim03
+function stratNickname(fam, given) {
+  const nick = rand(NICKNAMES);
+  const num = birthNum();
+  const sep = rand(SEPS_GENERAL);
+  const variants = [
+    () => nick.r + num,
+    () => nick.r + sep + num,
+    () => fam.r + nick.r + num,
+    () => nick.r + sep + fam.r,
+    () => leet(nick.r) + num,
+    () => nick.r + fragNum(num),
+    () => given.s[0] + sep + nick.r + num,
+    () => nick.r + "__" + num,
+  ];
+  return { id: cleanId(rand(variants)()), label: nick.h + " (" + fam.h + " " + given.h + ")" };
+}
+
+// 전략 9: 랜덤 음절 조합 — 한국어 발음 패턴 기반
+// samin97  joribam04  garumin_98  toksal01
+function stratRandomSyll(fam, given) {
+  const numSylls = randInt(2, 4);
+  const sylls = Array.from({length: numSylls}, () => rand(KR_SYLLS));
+  // 성씨 이니셜이나 음절을 하나 섞어 연결고리 만들기
+  if (prob(0.4)) sylls[0] = rand([fam.r.slice(0,2), fam.i, given.s[0].slice(0,2)]);
+  const base = sylls.join(rand(["","_","."]));
+  const num = birthNum();
+  const variants = [
+    () => base + num,
+    () => base + "_" + num,
+    () => base + "." + fragNum(num),
+    () => num + base,
+    () => base,
+  ];
+  return { id: cleanId(leet(rand(variants)())), label: fam.h + " " + given.h + " (랜덤)" };
+}
+
 // ════════════════════════════════════════════════════
 // 전략 선택기 (최근 2회 제외)
 // ════════════════════════════════════════════════════
@@ -641,6 +788,7 @@ function stratSyllableMix(fam, given) {
 const STRATEGIES = [
   stratFragmented, stratKeyboard, stratEngNick,
   stratKrWord, stratFrame, stratAesthetic, stratSyllableMix,
+  stratNickname, stratRandomSyll,
 ];
 let recentIdx = [];
 
