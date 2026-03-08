@@ -79,6 +79,11 @@
     button.primary:hover { background: #7C6347; border-color: #7C6347; }
     button.danger { color: var(--muted); border-color: var(--border); }
     button.danger:hover { color: #9B2B2B; border-color: #F0BBBB; background: #FFF0F0; }
+    .gender-bar { display: flex; gap: .5rem; margin-bottom: .75rem; align-items: center; }
+    .gender-bar span { font-size: .8rem; color: var(--sub); white-space: nowrap; }
+    button.gf { font-size: .82rem; padding: 5px 14px; }
+    button.gf.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.gf.active:hover { background: #7C6347; border-color: #7C6347; }
 
     /* Stats bar */
     .stats-bar {
@@ -162,6 +167,13 @@
     <button class="danger" onclick="resetLocalStorage()">로컬스토리지 초기화</button>
   </div>
 
+  <div class="gender-bar">
+    <span>이름 성별</span>
+    <button class="gf active" onclick="setGender('all', this)">전체</button>
+    <button class="gf" onclick="setGender('f', this)">여자이름</button>
+    <button class="gf" onclick="setGender('m', this)">남자이름</button>
+  </div>
+
   <div class="stats-bar">
     <span id="result-info">아직 생성된 아이디가 없습니다</span>
     <span id="history-info"></span>
@@ -203,130 +215,130 @@ const FAMILY_NAMES = [
 
 const GIVEN_NAMES = [
   // 여자 이름
-  {h:"서연",r:"seoyeon",s:["seo","yeon"],n:"sy"},
-  {h:"지우",r:"jiwoo",s:["ji","woo"],n:"jw"},
-  {h:"하은",r:"haeun",s:["ha","eun"],n:"he"},
-  {h:"예린",r:"yerin",s:["ye","rin"],n:"yr"},
-  {h:"수빈",r:"subin",s:["su","bin"],n:"sb"},
-  {h:"지민",r:"jimin",s:["ji","min"],n:"jm"},
-  {h:"예은",r:"yeeun",s:["ye","eun"],n:"ye"},
-  {h:"지유",r:"jiyu",s:["ji","yu"],n:"jy"},
-  {h:"민서",r:"minseo",s:["min","seo"],n:"ms"},
-  {h:"예원",r:"yewon",s:["ye","won"],n:"yw"},
-  {h:"수현",r:"suhyeon",s:["su","hyeon"],n:"sh"},
-  {h:"지원",r:"jiwon",s:["ji","won"],n:"jw"},
-  {h:"채원",r:"chaewon",s:["chae","won"],n:"cw"},
-  {h:"지아",r:"jia",s:["ji","a"],n:"ja"},
-  {h:"나은",r:"naeun",s:["na","eun"],n:"ne"},
-  {h:"유진",r:"yujin",s:["yu","jin"],n:"yj"},
-  {h:"은지",r:"eunji",s:["eun","ji"],n:"ej"},
-  {h:"가은",r:"gaeun",s:["ga","eun"],n:"ge"},
-  {h:"예나",r:"yena",s:["ye","na"],n:"yn"},
-  {h:"다은",r:"daeun",s:["da","eun"],n:"de"},
-  {h:"소연",r:"soyeon",s:["so","yeon"],n:"sy"},
-  {h:"은서",r:"eunseo",s:["eun","seo"],n:"es"},
-  {h:"혜원",r:"hyewon",s:["hye","won"],n:"hw"},
-  {h:"수아",r:"sua",s:["su","a"],n:"sa"},
-  {h:"지수",r:"jisoo",s:["ji","soo"],n:"js"},
-  {h:"민영",r:"minyoung",s:["min","young"],n:"my"},
-  {h:"소희",r:"sohee",s:["so","hee"],n:"sh"},
-  {h:"다인",r:"dain",s:["da","in"],n:"di"},
-  {h:"아린",r:"arin",s:["a","rin"],n:"ar"},
-  {h:"채은",r:"chaeeun",s:["chae","eun"],n:"ce"},
-  {h:"하늘",r:"haneul",s:["ha","neul"],n:"hn"},
-  {h:"보미",r:"bomi",s:["bo","mi"],n:"bm"},
-  {h:"나리",r:"nari",s:["na","ri"],n:"nr"},
-  {h:"소정",r:"sojeong",s:["so","jeong"],n:"sj"},
-  {h:"유나",r:"yuna",s:["yu","na"],n:"yn"},
-  {h:"아영",r:"ayoung",s:["a","young"],n:"ay"},
-  {h:"지현",r:"jihyeon",s:["ji","hyeon"],n:"jh"},
-  {h:"지은",r:"jieun",s:["ji","eun"],n:"je"},
-  {h:"지윤",r:"jiyoon",s:["ji","yoon"],n:"jy"},
-  {h:"미소",r:"miso",s:["mi","so"],n:"ms"},
-  {h:"하영",r:"hayoung",s:["ha","young"],n:"hy"},
-  {h:"선미",r:"sunmi",s:["sun","mi"],n:"sm"},
-  {h:"소미",r:"somi",s:["so","mi"],n:"sm"},
-  {h:"나현",r:"nahyeon",s:["na","hyeon"],n:"nh"},
-  {h:"보라",r:"bora",s:["bo","ra"],n:"br"},
-  {h:"수진",r:"sujin",s:["su","jin"],n:"sj"},
-  {h:"혜진",r:"hyejin",s:["hye","jin"],n:"hj"},
-  {h:"지선",r:"jiseon",s:["ji","seon"],n:"js"},
-  {h:"민지",r:"minji",s:["min","ji"],n:"mj"},
-  {h:"수연",r:"suyeon",s:["su","yeon"],n:"sy"},
-  {h:"예지",r:"yeji",s:["ye","ji"],n:"yj"},
-  {h:"현지",r:"hyeonji",s:["hyeon","ji"],n:"hj"},
-  {h:"세연",r:"seyeon",s:["se","yeon"],n:"sy"},
-  {h:"아현",r:"ahyeon",s:["a","hyeon"],n:"ah"},
-  {h:"주아",r:"jua",s:["ju","a"],n:"ja"},
-  {h:"리아",r:"ria",s:["ri","a"],n:"ra"},
-  {h:"솔이",r:"sori",s:["so","ri"],n:"sr"},
-  {h:"아인",r:"ain",s:["a","in"],n:"ai"},
-  {h:"채아",r:"chaea",s:["chae","a"],n:"ca"},
+  {h:"서연",r:"seoyeon",s:["seo","yeon"],n:"sy",g:"f"},
+  {h:"지우",r:"jiwoo",s:["ji","woo"],n:"jw",g:"f"},
+  {h:"하은",r:"haeun",s:["ha","eun"],n:"he",g:"f"},
+  {h:"예린",r:"yerin",s:["ye","rin"],n:"yr",g:"f"},
+  {h:"수빈",r:"subin",s:["su","bin"],n:"sb",g:"f"},
+  {h:"지민",r:"jimin",s:["ji","min"],n:"jm",g:"f"},
+  {h:"예은",r:"yeeun",s:["ye","eun"],n:"ye",g:"f"},
+  {h:"지유",r:"jiyu",s:["ji","yu"],n:"jy",g:"f"},
+  {h:"민서",r:"minseo",s:["min","seo"],n:"ms",g:"f"},
+  {h:"예원",r:"yewon",s:["ye","won"],n:"yw",g:"f"},
+  {h:"수현",r:"suhyeon",s:["su","hyeon"],n:"sh",g:"f"},
+  {h:"지원",r:"jiwon",s:["ji","won"],n:"jw",g:"f"},
+  {h:"채원",r:"chaewon",s:["chae","won"],n:"cw",g:"f"},
+  {h:"지아",r:"jia",s:["ji","a"],n:"ja",g:"f"},
+  {h:"나은",r:"naeun",s:["na","eun"],n:"ne",g:"f"},
+  {h:"유진",r:"yujin",s:["yu","jin"],n:"yj",g:"f"},
+  {h:"은지",r:"eunji",s:["eun","ji"],n:"ej",g:"f"},
+  {h:"가은",r:"gaeun",s:["ga","eun"],n:"ge",g:"f"},
+  {h:"예나",r:"yena",s:["ye","na"],n:"yn",g:"f"},
+  {h:"다은",r:"daeun",s:["da","eun"],n:"de",g:"f"},
+  {h:"소연",r:"soyeon",s:["so","yeon"],n:"sy",g:"f"},
+  {h:"은서",r:"eunseo",s:["eun","seo"],n:"es",g:"f"},
+  {h:"혜원",r:"hyewon",s:["hye","won"],n:"hw",g:"f"},
+  {h:"수아",r:"sua",s:["su","a"],n:"sa",g:"f"},
+  {h:"지수",r:"jisoo",s:["ji","soo"],n:"js",g:"f"},
+  {h:"민영",r:"minyoung",s:["min","young"],n:"my",g:"f"},
+  {h:"소희",r:"sohee",s:["so","hee"],n:"sh",g:"f"},
+  {h:"다인",r:"dain",s:["da","in"],n:"di",g:"f"},
+  {h:"아린",r:"arin",s:["a","rin"],n:"ar",g:"f"},
+  {h:"채은",r:"chaeeun",s:["chae","eun"],n:"ce",g:"f"},
+  {h:"하늘",r:"haneul",s:["ha","neul"],n:"hn",g:"f"},
+  {h:"보미",r:"bomi",s:["bo","mi"],n:"bm",g:"f"},
+  {h:"나리",r:"nari",s:["na","ri"],n:"nr",g:"f"},
+  {h:"소정",r:"sojeong",s:["so","jeong"],n:"sj",g:"f"},
+  {h:"유나",r:"yuna",s:["yu","na"],n:"yn",g:"f"},
+  {h:"아영",r:"ayoung",s:["a","young"],n:"ay",g:"f"},
+  {h:"지현",r:"jihyeon",s:["ji","hyeon"],n:"jh",g:"f"},
+  {h:"지은",r:"jieun",s:["ji","eun"],n:"je",g:"f"},
+  {h:"지윤",r:"jiyoon",s:["ji","yoon"],n:"jy",g:"f"},
+  {h:"미소",r:"miso",s:["mi","so"],n:"ms",g:"f"},
+  {h:"하영",r:"hayoung",s:["ha","young"],n:"hy",g:"f"},
+  {h:"선미",r:"sunmi",s:["sun","mi"],n:"sm",g:"f"},
+  {h:"소미",r:"somi",s:["so","mi"],n:"sm",g:"f"},
+  {h:"나현",r:"nahyeon",s:["na","hyeon"],n:"nh",g:"f"},
+  {h:"보라",r:"bora",s:["bo","ra"],n:"br",g:"f"},
+  {h:"수진",r:"sujin",s:["su","jin"],n:"sj",g:"f"},
+  {h:"혜진",r:"hyejin",s:["hye","jin"],n:"hj",g:"f"},
+  {h:"지선",r:"jiseon",s:["ji","seon"],n:"js",g:"f"},
+  {h:"민지",r:"minji",s:["min","ji"],n:"mj",g:"f"},
+  {h:"수연",r:"suyeon",s:["su","yeon"],n:"sy",g:"f"},
+  {h:"예지",r:"yeji",s:["ye","ji"],n:"yj",g:"f"},
+  {h:"현지",r:"hyeonji",s:["hyeon","ji"],n:"hj",g:"f"},
+  {h:"세연",r:"seyeon",s:["se","yeon"],n:"sy",g:"f"},
+  {h:"아현",r:"ahyeon",s:["a","hyeon"],n:"ah",g:"f"},
+  {h:"주아",r:"jua",s:["ju","a"],n:"ja",g:"f"},
+  {h:"리아",r:"ria",s:["ri","a"],n:"ra",g:"f"},
+  {h:"솔이",r:"sori",s:["so","ri"],n:"sr",g:"f"},
+  {h:"아인",r:"ain",s:["a","in"],n:"ai",g:"f"},
+  {h:"채아",r:"chaea",s:["chae","a"],n:"ca",g:"f"},
   // 남자 이름
-  {h:"민준",r:"minjun",s:["min","jun"],n:"mj"},
-  {h:"지호",r:"jiho",s:["ji","ho"],n:"jh"},
-  {h:"도현",r:"dohyeon",s:["do","hyeon"],n:"dh"},
-  {h:"하준",r:"hajun",s:["ha","jun"],n:"hj"},
-  {h:"서준",r:"seojun",s:["seo","jun"],n:"sj"},
-  {h:"민재",r:"minjae",s:["min","jae"],n:"mj"},
-  {h:"현준",r:"hyeonjun",s:["hyeon","jun"],n:"hj"},
-  {h:"시후",r:"sihu",s:["si","hu"],n:"sh"},
-  {h:"보민",r:"bomin",s:["bo","min"],n:"bm"},
-  {h:"세준",r:"sejun",s:["se","jun"],n:"sj"},
-  {h:"준혁",r:"junhyeok",s:["jun","hyeok"],n:"jh"},
-  {h:"규민",r:"gyumin",s:["gyu","min"],n:"gm"},
-  {h:"태민",r:"taemin",s:["tae","min"],n:"tm"},
-  {h:"지한",r:"jihan",s:["ji","han"],n:"jh"},
-  {h:"민호",r:"minho",s:["min","ho"],n:"mh"},
-  {h:"도윤",r:"doyoon",s:["do","yoon"],n:"dy"},
-  {h:"재원",r:"jaewon",s:["jae","won"],n:"jw"},
-  {h:"이준",r:"ijun",s:["i","jun"],n:"ij"},
-  {h:"승현",r:"seunghyeon",s:["seung","hyeon"],n:"sh"},
-  {h:"태양",r:"taeyang",s:["tae","yang"],n:"ty"},
-  {h:"준서",r:"junseo",s:["jun","seo"],n:"js"},
-  {h:"지환",r:"jihwan",s:["ji","hwan"],n:"jh"},
-  {h:"수환",r:"suhwan",s:["su","hwan"],n:"sh"},
-  {h:"재민",r:"jaemin",s:["jae","min"],n:"jm"},
-  {h:"태준",r:"taejun",s:["tae","jun"],n:"tj"},
-  {h:"선우",r:"sunwoo",s:["sun","woo"],n:"sw"},
-  {h:"우진",r:"woojin",s:["woo","jin"],n:"wj"},
-  {h:"성민",r:"seongmin",s:["seong","min"],n:"sm"},
-  {h:"현우",r:"hyunwoo",s:["hyun","woo"],n:"hw"},
-  {h:"진우",r:"jinwoo",s:["jin","woo"],n:"jw"},
-  {h:"동현",r:"donghyeon",s:["dong","hyeon"],n:"dh"},
-  {h:"기현",r:"gihyeon",s:["gi","hyeon"],n:"gh"},
-  {h:"유찬",r:"yuchan",s:["yu","chan"],n:"yc"},
-  {h:"정원",r:"jeongwon",s:["jeong","won"],n:"jw"},
-  {h:"건우",r:"geonwoo",s:["geon","woo"],n:"gw"},
-  {h:"태호",r:"taeho",s:["tae","ho"],n:"th"},
-  {h:"준호",r:"junho",s:["jun","ho"],n:"jh"},
-  {h:"민규",r:"mingyu",s:["min","gyu"],n:"mg"},
-  {h:"성준",r:"sungjun",s:["sung","jun"],n:"sj"},
-  {h:"재호",r:"jaeho",s:["jae","ho"],n:"jh"},
-  {h:"상현",r:"sanghyeon",s:["sang","hyeon"],n:"sh"},
-  {h:"도훈",r:"dohun",s:["do","hun"],n:"dh"},
-  {h:"민성",r:"minseong",s:["min","seong"],n:"ms"},
-  {h:"찬영",r:"chanyeong",s:["chan","yeong"],n:"cy"},
-  {h:"영준",r:"yeongjun",s:["yeong","jun"],n:"yj"},
-  // 중성적 이름
-  {h:"시온",r:"sion",s:["si","on"],n:"so"},
-  {h:"새봄",r:"saebyeom",s:["sae","byeom"],n:"sb"},
-  {h:"가람",r:"garam",s:["ga","ram"],n:"gr"},
-  {h:"다솜",r:"dasom",s:["da","som"],n:"ds"},
-  {h:"하람",r:"haram",s:["ha","ram"],n:"hr"},
-  {h:"이루",r:"iru",s:["i","ru"],n:"ir"},
-  {h:"세아",r:"sea",s:["se","a"],n:"sa"},
-  {h:"아라",r:"ara",s:["a","ra"],n:"ar"},
-  {h:"나래",r:"narae",s:["na","rae"],n:"nr"},
-  {h:"소울",r:"soul",s:["so","ul"],n:"su"},
-  {h:"이슬",r:"isul",s:["i","sul"],n:"is"},
-  {h:"파랑",r:"parang",s:["pa","rang"],n:"pr"},
-  {h:"봄비",r:"bombi",s:["bom","bi"],n:"bb"},
-  {h:"해온",r:"haeon",s:["hae","on"],n:"ho"},
-  {h:"라온",r:"raon",s:["ra","on"],n:"ro"},
-  {h:"바온",r:"baon",s:["ba","on"],n:"bo"},
-  {h:"율",r:"yul",s:["yul"],n:"yl"},
-  {h:"담이",r:"dami",s:["da","mi"],n:"dm"},
+  {h:"민준",r:"minjun",s:["min","jun"],n:"mj",g:"m"},
+  {h:"지호",r:"jiho",s:["ji","ho"],n:"jh",g:"m"},
+  {h:"도현",r:"dohyeon",s:["do","hyeon"],n:"dh",g:"m"},
+  {h:"하준",r:"hajun",s:["ha","jun"],n:"hj",g:"m"},
+  {h:"서준",r:"seojun",s:["seo","jun"],n:"sj",g:"m"},
+  {h:"민재",r:"minjae",s:["min","jae"],n:"mj",g:"m"},
+  {h:"현준",r:"hyeonjun",s:["hyeon","jun"],n:"hj",g:"m"},
+  {h:"시후",r:"sihu",s:["si","hu"],n:"sh",g:"m"},
+  {h:"보민",r:"bomin",s:["bo","min"],n:"bm",g:"m"},
+  {h:"세준",r:"sejun",s:["se","jun"],n:"sj",g:"m"},
+  {h:"준혁",r:"junhyeok",s:["jun","hyeok"],n:"jh",g:"m"},
+  {h:"규민",r:"gyumin",s:["gyu","min"],n:"gm",g:"m"},
+  {h:"태민",r:"taemin",s:["tae","min"],n:"tm",g:"m"},
+  {h:"지한",r:"jihan",s:["ji","han"],n:"jh",g:"m"},
+  {h:"민호",r:"minho",s:["min","ho"],n:"mh",g:"m"},
+  {h:"도윤",r:"doyoon",s:["do","yoon"],n:"dy",g:"m"},
+  {h:"재원",r:"jaewon",s:["jae","won"],n:"jw",g:"m"},
+  {h:"이준",r:"ijun",s:["i","jun"],n:"ij",g:"m"},
+  {h:"승현",r:"seunghyeon",s:["seung","hyeon"],n:"sh",g:"m"},
+  {h:"태양",r:"taeyang",s:["tae","yang"],n:"ty",g:"m"},
+  {h:"준서",r:"junseo",s:["jun","seo"],n:"js",g:"m"},
+  {h:"지환",r:"jihwan",s:["ji","hwan"],n:"jh",g:"m"},
+  {h:"수환",r:"suhwan",s:["su","hwan"],n:"sh",g:"m"},
+  {h:"재민",r:"jaemin",s:["jae","min"],n:"jm",g:"m"},
+  {h:"태준",r:"taejun",s:["tae","jun"],n:"tj",g:"m"},
+  {h:"선우",r:"sunwoo",s:["sun","woo"],n:"sw",g:"m"},
+  {h:"우진",r:"woojin",s:["woo","jin"],n:"wj",g:"m"},
+  {h:"성민",r:"seongmin",s:["seong","min"],n:"sm",g:"m"},
+  {h:"현우",r:"hyunwoo",s:["hyun","woo"],n:"hw",g:"m"},
+  {h:"진우",r:"jinwoo",s:["jin","woo"],n:"jw",g:"m"},
+  {h:"동현",r:"donghyeon",s:["dong","hyeon"],n:"dh",g:"m"},
+  {h:"기현",r:"gihyeon",s:["gi","hyeon"],n:"gh",g:"m"},
+  {h:"유찬",r:"yuchan",s:["yu","chan"],n:"yc",g:"m"},
+  {h:"정원",r:"jeongwon",s:["jeong","won"],n:"jw",g:"m"},
+  {h:"건우",r:"geonwoo",s:["geon","woo"],n:"gw",g:"m"},
+  {h:"태호",r:"taeho",s:["tae","ho"],n:"th",g:"m"},
+  {h:"준호",r:"junho",s:["jun","ho"],n:"jh",g:"m"},
+  {h:"민규",r:"mingyu",s:["min","gyu"],n:"mg",g:"m"},
+  {h:"성준",r:"sungjun",s:["sung","jun"],n:"sj",g:"m"},
+  {h:"재호",r:"jaeho",s:["jae","ho"],n:"jh",g:"m"},
+  {h:"상현",r:"sanghyeon",s:["sang","hyeon"],n:"sh",g:"m"},
+  {h:"도훈",r:"dohun",s:["do","hun"],n:"dh",g:"m"},
+  {h:"민성",r:"minseong",s:["min","seong"],n:"ms",g:"m"},
+  {h:"찬영",r:"chanyeong",s:["chan","yeong"],n:"cy",g:"m"},
+  {h:"영준",r:"yeongjun",s:["yeong","jun"],n:"yj",g:"m"},
+  // 중성적 이름 (양쪽 필터 모두에 포함)
+  {h:"시온",r:"sion",s:["si","on"],n:"so",g:"n"},
+  {h:"새봄",r:"saebyeom",s:["sae","byeom"],n:"sb",g:"n"},
+  {h:"가람",r:"garam",s:["ga","ram"],n:"gr",g:"n"},
+  {h:"다솜",r:"dasom",s:["da","som"],n:"ds",g:"n"},
+  {h:"하람",r:"haram",s:["ha","ram"],n:"hr",g:"n"},
+  {h:"이루",r:"iru",s:["i","ru"],n:"ir",g:"n"},
+  {h:"세아",r:"sea",s:["se","a"],n:"sa",g:"n"},
+  {h:"아라",r:"ara",s:["a","ra"],n:"ar",g:"n"},
+  {h:"나래",r:"narae",s:["na","rae"],n:"nr",g:"n"},
+  {h:"소울",r:"soul",s:["so","ul"],n:"su",g:"n"},
+  {h:"이슬",r:"isul",s:["i","sul"],n:"is",g:"n"},
+  {h:"파랑",r:"parang",s:["pa","rang"],n:"pr",g:"n"},
+  {h:"봄비",r:"bombi",s:["bom","bi"],n:"bb",g:"n"},
+  {h:"해온",r:"haeon",s:["hae","on"],n:"ho",g:"n"},
+  {h:"라온",r:"raon",s:["ra","on"],n:"ro",g:"n"},
+  {h:"바온",r:"baon",s:["ba","on"],n:"bo",g:"n"},
+  {h:"율",r:"yul",s:["yul"],n:"yl",g:"n"},
+  {h:"담이",r:"dami",s:["da","mi"],n:"dm",g:"n"},
 ];
 
 // 한국어 단어/별명
@@ -815,12 +827,29 @@ function saveHistory(h) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
 }
 
+// 성별 필터 상태
+let genderFilter = "all";
+
+function setGender(g, btn) {
+  genderFilter = g;
+  document.querySelectorAll(".gf").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function namePool() {
+  if (genderFilter === "all") return GIVEN_NAMES;
+  return GIVEN_NAMES.filter(n => n.g === genderFilter || n.g === "n");
+}
+
 function generateOne(usedSet) {
   const MAX = 100;
   for (let i = 0; i < MAX; i++) {
-    const fam   = rand(FAMILY_NAMES);
-    const given = rand(GIVEN_NAMES);
+    const fam     = rand(FAMILY_NAMES);
     const stratFn = pickStrategy();
+    // stratNickname·stratRandomSyll은 성별 무관 → 전체 풀 사용
+    const pool  = (stratFn === stratNickname || stratFn === stratRandomSyll)
+                  ? GIVEN_NAMES : namePool();
+    const given = rand(pool);
     let result;
     try { result = stratFn(fam, given); }
     catch { continue; }
