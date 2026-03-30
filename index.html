@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Korean Instagram ID Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F9F7F4;
+      --surface: #FFFFFF;
+      --border: #E5E0D8;
+      --text: #1C1917;
+      --sub: #78716C;
+      --muted: #A8A29E;
+      --accent: #C4A882;
+      --accent-d: #9B7E5A;
+      --green: #4C9E72;
+      --radius: 6px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1rem 4rem;
+      font-size: 14px;
+    }
+    .wrap { max-width: 700px; margin: 0 auto; }
+
+    /* Header */
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; }
+    .header p  { font-size: .8rem; color: var(--sub); margin-top: .3rem; line-height: 1.5; }
+
+    /* Rules badge */
+    .rules {
+      display: flex; flex-wrap: wrap; gap: .4rem;
+      margin-bottom: 1.5rem;
+    }
+    .rule-badge {
+      font-size: .7rem; padding: 3px 9px;
+      border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--sub);
+    }
+    .rule-badge.ok  { border-color: #BBD9C8; color: #2E7D52; background: #F0FAF4; }
+    .rule-badge.no  { border-color: #F0BBBB; color: #9B2B2B; background: #FFF0F0; }
+
+    /* Controls */
+    .controls {
+      display: flex; align-items: center; gap: .6rem;
+      flex-wrap: wrap; margin-bottom: 1rem;
+    }
+    .controls label { font-size: .8rem; color: var(--sub); white-space: nowrap; }
+    input[type=number] {
+      width: 72px; padding: 7px 10px;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      font-size: .85rem; font-family: inherit;
+      background: var(--surface); color: var(--text);
+    }
+    input[type=number]:focus { outline: none; border-color: var(--accent); }
+    button {
+      padding: 7px 16px;
+      border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--text);
+      border-radius: var(--radius);
+      font-size: .8rem; font-family: inherit;
+      cursor: pointer; transition: .12s ease;
+      white-space: nowrap;
+    }
+    button:hover { border-color: var(--accent); color: var(--accent-d); }
+    button.primary {
+      background: var(--accent-d); border-color: var(--accent-d);
+      color: #fff; font-weight: 500;
+    }
+    button.primary:hover { background: #7C6347; border-color: #7C6347; }
+    button.danger { color: var(--muted); border-color: var(--border); }
+    button.danger:hover { color: #9B2B2B; border-color: #F0BBBB; background: #FFF0F0; }
+    .gender-bar { display: flex; gap: .5rem; margin-bottom: .75rem; align-items: center; }
+    .gender-bar span { font-size: .8rem; color: var(--sub); white-space: nowrap; }
+    button.gf { font-size: .82rem; padding: 5px 14px; }
+    button.gf.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.gf.active:hover { background: #7C6347; border-color: #7C6347; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .75rem; color: var(--muted);
+      padding: .5rem 0; margin-bottom: .5rem;
+    }
+
+    /* Output */
+    #output {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .empty {
+      padding: 3rem; text-align: center;
+      color: var(--muted); font-size: .85rem;
+    }
+
+    /* Table header */
+    .id-table-head {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 2.5fr;
+      gap: 0;
+      padding: .4rem 1rem;
+      background: #F5F1EB;
+      border-bottom: 1.5px solid var(--border);
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--sub);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    /* List rows */
+    .id-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 2.5fr;
+      align-items: center;
+      gap: 0;
+      padding: .45rem 1rem;
+      border-bottom: 1px solid #F3EFE8;
+      transition: background .08s;
+    }
+    .id-row:last-child { border-bottom: none; }
+    .id-row:hover { background: #FDFBF8; }
+
+    .id-val {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: .88rem;
+      letter-spacing: .02em;
+      color: var(--text);
+      word-break: break-all;
+      padding-right: .5rem;
+    }
+
+    .id-name {
+      font-size: .78rem; color: var(--sub);
+      white-space: nowrap;
+      padding-right: .5rem;
+    }
+
+    .id-bio-cell {
+      font-size: .75rem; color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Footer note */
+    .footnote { font-size: .7rem; color: var(--muted); margin-top: 1rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <h1>Korean Instagram ID Generator</h1>
+    <p>Korean-style · Low duplicates · Name-based</p>
+  </div>
+
+  <div class="rules">
+    <span class="rule-badge ok">_ allowed anywhere</span>
+    <span class="rule-badge ok">__ double underscore OK</span>
+    <span class="rule-badge ok">. in middle OK</span>
+    <span class="rule-badge no">no leading/trailing .</span>
+    <span class="rule-badge no">no consecutive ..</span>
+    <span class="rule-badge no">6–11 chars</span>
+  </div>
+
+  <div class="controls">
+    <label>Count</label>
+    <input type="number" id="count" value="500" min="1" max="5000">
+    <button class="primary" onclick="generateBatch()">Generate</button>
+    <button onclick="copyAll(this)">Copy All</button>
+    <button onclick="exportCSV()">Save CSV</button>
+    <button class="danger" onclick="resetLocalStorage()">Reset Storage</button>
+  </div>
+
+  <div class="gender-bar">
+    <span>Name gender</span>
+    <button class="gf active" onclick="setGender('all', this)">All</button>
+    <button class="gf" onclick="setGender('f', this)">Female</button>
+    <button class="gf" onclick="setGender('m', this)">Male</button>
+  </div>
+
+  <div class="stats-bar">
+    <span id="result-info">No IDs generated yet</span>
+    <span id="history-info"></span>
+  </div>
+
+  <div id="output">
+    <div class="empty">Enter a count above and click <strong>Generate</strong>.</div>
+  </div>
+
+  <p class="footnote">
+    * Generated IDs are saved in LocalStorage. No duplicates within the same browser.<br>
+    * Names are for reference only. Verify availability directly on Instagram.
+  </p>
+
+</div>
+<script>
+// ════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════
+
+const FAMILY_NAMES = [
+  {h:"김",r:"kim",i:"k"}, {h:"이",r:"lee",i:"l"}, {h:"박",r:"park",i:"p"},
+  {h:"최",r:"choi",i:"c"}, {h:"정",r:"jeong",i:"j"}, {h:"강",r:"kang",i:"k"},
+  {h:"조",r:"jo",i:"j"}, {h:"윤",r:"yoon",i:"y"}, {h:"장",r:"jang",i:"j"},
+  {h:"임",r:"lim",i:"l"}, {h:"한",r:"han",i:"h"}, {h:"오",r:"oh",i:"o"},
+  {h:"서",r:"seo",i:"s"}, {h:"신",r:"shin",i:"s"}, {h:"권",r:"kwon",i:"k"},
+  {h:"황",r:"hwang",i:"h"}, {h:"안",r:"ahn",i:"a"}, {h:"송",r:"song",i:"s"},
+  {h:"유",r:"yoo",i:"y"}, {h:"홍",r:"hong",i:"h"}, {h:"전",r:"jeon",i:"j"},
+  {h:"고",r:"ko",i:"k"}, {h:"문",r:"moon",i:"m"}, {h:"손",r:"son",i:"s"},
+  {h:"양",r:"yang",i:"y"}, {h:"배",r:"bae",i:"b"}, {h:"허",r:"heo",i:"h"},
+  {h:"남",r:"nam",i:"n"}, {h:"심",r:"sim",i:"s"}, {h:"류",r:"ryu",i:"r"},
+  {h:"하",r:"ha",i:"h"}, {h:"노",r:"noh",i:"n"}, {h:"엄",r:"uhm",i:"u"},
+  {h:"구",r:"koo",i:"k"}, {h:"진",r:"jin",i:"j"}, {h:"나",r:"na",i:"n"},
+  {h:"민",r:"min",i:"m"}, {h:"백",r:"baek",i:"b"}, {h:"성",r:"seong",i:"s"},
+  {h:"차",r:"cha",i:"c"}, {h:"공",r:"kong",i:"k"}, {h:"변",r:"byeon",i:"b"},
+  {h:"원",r:"won",i:"w"}, {h:"천",r:"cheon",i:"c"}, {h:"방",r:"bang",i:"b"},
+  {h:"형",r:"hyeong",i:"h"}, {h:"추",r:"chu",i:"c"}, {h:"탁",r:"tak",i:"t"},
+];
+
+const GIVEN_NAMES = [
+  // 여자 이름
+  {h:"서연",r:"seoyeon",s:["seo","yeon"],n:"sy",g:"f"},
+  {h:"지우",r:"jiwoo",s:["ji","woo"],n:"jw",g:"f"},
+  {h:"하은",r:"haeun",s:["ha","eun"],n:"he",g:"f"},
+  {h:"예린",r:"yerin",s:["ye","rin"],n:"yr",g:"f"},
+  {h:"수빈",r:"subin",s:["su","bin"],n:"sb",g:"f"},
+  {h:"지민",r:"jimin",s:["ji","min"],n:"jm",g:"n"},
+  {h:"예은",r:"yeeun",s:["ye","eun"],n:"ye",g:"f"},
+  {h:"지유",r:"jiyu",s:["ji","yu"],n:"jy",g:"f"},
+  {h:"민서",r:"minseo",s:["min","seo"],n:"ms",g:"f"},
+  {h:"예원",r:"yewon",s:["ye","won"],n:"yw",g:"f"},
+  {h:"수현",r:"suhyeon",s:["su","hyeon"],n:"sh",g:"n"},
+  {h:"지원",r:"jiwon",s:["ji","won"],n:"jw",g:"n"},
+  {h:"채원",r:"chaewon",s:["chae","won"],n:"cw",g:"f"},
+  {h:"지아",r:"jia",s:["ji","a"],n:"ja",g:"f"},
+  {h:"나은",r:"naeun",s:["na","eun"],n:"ne",g:"f"},
+  {h:"유진",r:"yujin",s:["yu","jin"],n:"yj",g:"n"},
+  {h:"은지",r:"eunji",s:["eun","ji"],n:"ej",g:"f"},
+  {h:"가은",r:"gaeun",s:["ga","eun"],n:"ge",g:"f"},
+  {h:"예나",r:"yena",s:["ye","na"],n:"yn",g:"f"},
+  {h:"다은",r:"daeun",s:["da","eun"],n:"de",g:"f"},
+  {h:"소연",r:"soyeon",s:["so","yeon"],n:"sy",g:"f"},
+  {h:"은서",r:"eunseo",s:["eun","seo"],n:"es",g:"f"},
+  {h:"혜원",r:"hyewon",s:["hye","won"],n:"hw",g:"f"},
+  {h:"수아",r:"sua",s:["su","a"],n:"sa",g:"f"},
+  {h:"지수",r:"jisoo",s:["ji","soo"],n:"js",g:"n"},
+  {h:"민영",r:"minyoung",s:["min","young"],n:"my",g:"f"},
+  {h:"소희",r:"sohee",s:["so","hee"],n:"sh",g:"f"},
+  {h:"다인",r:"dain",s:["da","in"],n:"di",g:"f"},
+  {h:"아린",r:"arin",s:["a","rin"],n:"ar",g:"f"},
+  {h:"채은",r:"chaeeun",s:["chae","eun"],n:"ce",g:"f"},
+  {h:"하늘",r:"haneul",s:["ha","neul"],n:"hn",g:"f"},
+  {h:"보미",r:"bomi",s:["bo","mi"],n:"bm",g:"f"},
+  {h:"나리",r:"nari",s:["na","ri"],n:"nr",g:"f"},
+  {h:"소정",r:"sojeong",s:["so","jeong"],n:"sj",g:"f"},
+  {h:"유나",r:"yuna",s:["yu","na"],n:"yn",g:"f"},
+  {h:"아영",r:"ayoung",s:["a","young"],n:"ay",g:"f"},
+  {h:"지현",r:"jihyeon",s:["ji","hyeon"],n:"jh",g:"f"},
+  {h:"지은",r:"jieun",s:["ji","eun"],n:"je",g:"f"},
+  {h:"지윤",r:"jiyoon",s:["ji","yoon"],n:"jy",g:"f"},
+  {h:"미소",r:"miso",s:["mi","so"],n:"ms",g:"f"},
+  {h:"하영",r:"hayoung",s:["ha","young"],n:"hy",g:"f"},
+  {h:"선미",r:"sunmi",s:["sun","mi"],n:"sm",g:"f"},
+  {h:"소미",r:"somi",s:["so","mi"],n:"sm",g:"f"},
+  {h:"나현",r:"nahyeon",s:["na","hyeon"],n:"nh",g:"f"},
+  {h:"보라",r:"bora",s:["bo","ra"],n:"br",g:"f"},
+  {h:"수진",r:"sujin",s:["su","jin"],n:"sj",g:"f"},
+  {h:"혜진",r:"hyejin",s:["hye","jin"],n:"hj",g:"f"},
+  {h:"지선",r:"jiseon",s:["ji","seon"],n:"js",g:"f"},
+  {h:"민지",r:"minji",s:["min","ji"],n:"mj",g:"f"},
+  {h:"수연",r:"suyeon",s:["su","yeon"],n:"sy",g:"f"},
+  {h:"예지",r:"yeji",s:["ye","ji"],n:"yj",g:"f"},
+  {h:"현지",r:"hyeonji",s:["hyeon","ji"],n:"hj",g:"f"},
+  {h:"세연",r:"seyeon",s:["se","yeon"],n:"sy",g:"f"},
+  {h:"아현",r:"ahyeon",s:["a","hyeon"],n:"ah",g:"f"},
+  {h:"주아",r:"jua",s:["ju","a"],n:"ja",g:"f"},
+  {h:"리아",r:"ria",s:["ri","a"],n:"ra",g:"f"},
+  {h:"솔이",r:"sori",s:["so","ri"],n:"sr",g:"f"},
+  {h:"아인",r:"ain",s:["a","in"],n:"ai",g:"f"},
+  {h:"채아",r:"chaea",s:["chae","a"],n:"ca",g:"f"},
+  // 남자 이름
+  {h:"민준",r:"minjun",s:["min","jun"],n:"mj",g:"m"},
+  {h:"지호",r:"jiho",s:["ji","ho"],n:"jh",g:"m"},
+  {h:"도현",r:"dohyeon",s:["do","hyeon"],n:"dh",g:"m"},
+  {h:"하준",r:"hajun",s:["ha","jun"],n:"hj",g:"m"},
+  {h:"서준",r:"seojun",s:["seo","jun"],n:"sj",g:"m"},
+  {h:"민재",r:"minjae",s:["min","jae"],n:"mj",g:"m"},
+  {h:"현준",r:"hyeonjun",s:["hyeon","jun"],n:"hj",g:"m"},
+  {h:"시후",r:"sihu",s:["si","hu"],n:"sh",g:"m"},
+  {h:"보민",r:"bomin",s:["bo","min"],n:"bm",g:"f"},
+  {h:"세준",r:"sejun",s:["se","jun"],n:"sj",g:"m"},
+  {h:"준혁",r:"junhyeok",s:["jun","hyeok"],n:"jh",g:"m"},
+  {h:"규민",r:"gyumin",s:["gyu","min"],n:"gm",g:"m"},
+  {h:"태민",r:"taemin",s:["tae","min"],n:"tm",g:"m"},
+  {h:"지한",r:"jihan",s:["ji","han"],n:"jh",g:"m"},
+  {h:"민호",r:"minho",s:["min","ho"],n:"mh",g:"m"},
+  {h:"도윤",r:"doyoon",s:["do","yoon"],n:"dy",g:"m"},
+  {h:"재원",r:"jaewon",s:["jae","won"],n:"jw",g:"m"},
+  {h:"이준",r:"ijun",s:["i","jun"],n:"ij",g:"m"},
+  {h:"승현",r:"seunghyeon",s:["seung","hyeon"],n:"sh",g:"m"},
+  {h:"태양",r:"taeyang",s:["tae","yang"],n:"ty",g:"m"},
+  {h:"준서",r:"junseo",s:["jun","seo"],n:"js",g:"m"},
+  {h:"지환",r:"jihwan",s:["ji","hwan"],n:"jh",g:"m"},
+  {h:"수환",r:"suhwan",s:["su","hwan"],n:"sh",g:"m"},
+  {h:"재민",r:"jaemin",s:["jae","min"],n:"jm",g:"m"},
+  {h:"태준",r:"taejun",s:["tae","jun"],n:"tj",g:"m"},
+  {h:"선우",r:"sunwoo",s:["sun","woo"],n:"sw",g:"m"},
+  {h:"우진",r:"woojin",s:["woo","jin"],n:"wj",g:"m"},
+  {h:"성민",r:"seongmin",s:["seong","min"],n:"sm",g:"m"},
+  {h:"현우",r:"hyunwoo",s:["hyun","woo"],n:"hw",g:"m"},
+  {h:"진우",r:"jinwoo",s:["jin","woo"],n:"jw",g:"m"},
+  {h:"동현",r:"donghyeon",s:["dong","hyeon"],n:"dh",g:"m"},
+  {h:"기현",r:"gihyeon",s:["gi","hyeon"],n:"gh",g:"m"},
+  {h:"유찬",r:"yuchan",s:["yu","chan"],n:"yc",g:"m"},
+  {h:"정원",r:"jeongwon",s:["jeong","won"],n:"jw",g:"n"},
+  {h:"건우",r:"geonwoo",s:["geon","woo"],n:"gw",g:"m"},
+  {h:"태호",r:"taeho",s:["tae","ho"],n:"th",g:"m"},
+  {h:"준호",r:"junho",s:["jun","ho"],n:"jh",g:"m"},
+  {h:"민규",r:"mingyu",s:["min","gyu"],n:"mg",g:"m"},
+  {h:"성준",r:"sungjun",s:["sung","jun"],n:"sj",g:"m"},
+  {h:"재호",r:"jaeho",s:["jae","ho"],n:"jh",g:"m"},
+  {h:"상현",r:"sanghyeon",s:["sang","hyeon"],n:"sh",g:"m"},
+  {h:"도훈",r:"dohun",s:["do","hun"],n:"dh",g:"m"},
+  {h:"민성",r:"minseong",s:["min","seong"],n:"ms",g:"m"},
+  {h:"찬영",r:"chanyeong",s:["chan","yeong"],n:"cy",g:"m"},
+  {h:"영준",r:"yeongjun",s:["yeong","jun"],n:"yj",g:"m"},
+  // 중성적 이름 (양쪽 필터 모두에 포함)
+  {h:"시온",r:"sion",s:["si","on"],n:"so",g:"n"},
+  {h:"새봄",r:"saebyeom",s:["sae","byeom"],n:"sb",g:"f"},
+  {h:"가람",r:"garam",s:["ga","ram"],n:"gr",g:"n"},
+  {h:"다솜",r:"dasom",s:["da","som"],n:"ds",g:"f"},
+  {h:"하람",r:"haram",s:["ha","ram"],n:"hr",g:"n"},
+  {h:"이루",r:"iru",s:["i","ru"],n:"ir",g:"n"},
+  {h:"세아",r:"sea",s:["se","a"],n:"sa",g:"f"},
+  {h:"아라",r:"ara",s:["a","ra"],n:"ar",g:"f"},
+  {h:"나래",r:"narae",s:["na","rae"],n:"nr",g:"f"},
+  {h:"소울",r:"soul",s:["so","ul"],n:"su",g:"n"},
+  {h:"이슬",r:"isul",s:["i","sul"],n:"is",g:"f"},
+  {h:"파랑",r:"parang",s:["pa","rang"],n:"pr",g:"m"},
+  {h:"봄비",r:"bombi",s:["bom","bi"],n:"bb",g:"f"},
+  {h:"해온",r:"haeon",s:["hae","on"],n:"ho",g:"f"},
+  {h:"라온",r:"raon",s:["ra","on"],n:"ro",g:"m"},
+  {h:"바온",r:"baon",s:["ba","on"],n:"bo",g:"m"},
+  {h:"율",r:"yul",s:["yul"],n:"yl",g:"n"},
+  {h:"담이",r:"dami",s:["da","mi"],n:"dm",g:"f"},
+  // 추가 여성 이름
+  {h:"서아",r:"seoa",s:["seo","a"],n:"sa",g:"f"},
+  {h:"하린",r:"harin",s:["ha","rin"],n:"hr",g:"f"},
+  {h:"수린",r:"surin",s:["su","rin"],n:"sr",g:"f"},
+  {h:"유리",r:"yuri",s:["yu","ri"],n:"yr",g:"f"},
+  {h:"윤서",r:"yunseo",s:["yun","seo"],n:"ys",g:"f"},
+  {h:"주은",r:"jueun",s:["ju","eun"],n:"je",g:"f"},
+  {h:"채린",r:"chaerin",s:["chae","rin"],n:"cr",g:"f"},
+  {h:"나윤",r:"nayoon",s:["na","yoon"],n:"ny",g:"f"},
+  {h:"하윤",r:"hayoon",s:["ha","yoon"],n:"hy",g:"f"},
+  {h:"세린",r:"serin",s:["se","rin"],n:"sr",g:"f"},
+  {h:"슬기",r:"seulgi",s:["seul","gi"],n:"sg",g:"f"},
+  {h:"세영",r:"seyeong",s:["se","yeong"],n:"sy",g:"f"},
+  {h:"민아",r:"mina",s:["min","a"],n:"ma",g:"f"},
+  {h:"소아",r:"soa",s:["so","a"],n:"sa",g:"f"},
+  {h:"예슬",r:"yeseul",s:["ye","seul"],n:"ys",g:"f"},
+  {h:"가인",r:"gain",s:["ga","in"],n:"gi",g:"f"},
+  {h:"가영",r:"gayeong",s:["ga","yeong"],n:"gy",g:"f"},
+  {h:"초아",r:"choa",s:["cho","a"],n:"ca",g:"f"},
+  {h:"수안",r:"suan",s:["su","an"],n:"sa",g:"f"},
+  {h:"지율",r:"jiyul",s:["ji","yul"],n:"jy",g:"f"},
+  {h:"다연",r:"dayeon",s:["da","yeon"],n:"dy",g:"f"},
+  {h:"아연",r:"ayeon",s:["a","yeon"],n:"ay",g:"f"},
+  {h:"예솔",r:"yesol",s:["ye","sol"],n:"ys",g:"f"},
+  {h:"보선",r:"boseon",s:["bo","seon"],n:"bs",g:"f"},
+  {h:"다현",r:"dahyeon",s:["da","hyeon"],n:"dh",g:"f"},
+  {h:"지혜",r:"jihye",s:["ji","hye"],n:"jh",g:"f"},
+  {h:"소현",r:"sohyeon",s:["so","hyeon"],n:"sh",g:"f"},
+  {h:"미래",r:"mirae",s:["mi","rae"],n:"mr",g:"f"},
+  {h:"은별",r:"eunbyeol",s:["eun","byeol"],n:"eb",g:"f"},
+  {h:"별이",r:"byeori",s:["byeo","ri"],n:"br",g:"f"},
+  {h:"다래",r:"darae",s:["da","rae"],n:"dr",g:"f"},
+  {h:"하루",r:"haru",s:["ha","ru"],n:"hr",g:"f"},
+  // 추가 남성 이름
+  {h:"재현",r:"jaehyeon",s:["jae","hyeon"],n:"jh",g:"m"},
+  {h:"형준",r:"hyeongjun",s:["hyeong","jun"],n:"hj",g:"m"},
+  {h:"현석",r:"hyeonseok",s:["hyeon","seok"],n:"hs",g:"m"},
+  {h:"재성",r:"jaeseong",s:["jae","seong"],n:"js",g:"m"},
+  {h:"진혁",r:"jinhyeok",s:["jin","hyeok"],n:"jh",g:"m"},
+  {h:"민혁",r:"minhyeok",s:["min","hyeok"],n:"mh",g:"m"},
+  {h:"동준",r:"dongjun",s:["dong","jun"],n:"dj",g:"m"},
+  {h:"주호",r:"juho",s:["ju","ho"],n:"jh",g:"m"},
+  {h:"재준",r:"jaejun",s:["jae","jun"],n:"jj",g:"m"},
+  {h:"현민",r:"hyeonmin",s:["hyeon","min"],n:"hm",g:"m"},
+  {h:"지성",r:"jiseong",s:["ji","seong"],n:"js",g:"m"},
+  {h:"경민",r:"gyeongmin",s:["gyeong","min"],n:"gm",g:"m"},
+  {h:"태경",r:"taekyeong",s:["tae","kyeong"],n:"tk",g:"m"},
+  {h:"인준",r:"injun",s:["in","jun"],n:"ij",g:"m"},
+  {h:"준영",r:"junyeong",s:["jun","yeong"],n:"jy",g:"m"},
+  {h:"혁진",r:"hyeokjin",s:["hyeok","jin"],n:"hj",g:"m"},
+  {h:"민찬",r:"minchan",s:["min","chan"],n:"mc",g:"m"},
+  {h:"태환",r:"taehwan",s:["tae","hwan"],n:"th",g:"m"},
+  {h:"재혁",r:"jaehyeok",s:["jae","hyeok"],n:"jh",g:"m"},
+  {h:"성호",r:"seongho",s:["seong","ho"],n:"sh",g:"m"},
+  {h:"기훈",r:"gihun",s:["gi","hun"],n:"gh",g:"m"},
+  // 추가 중성 이름
+  {h:"수민",r:"sumin",s:["su","min"],n:"sm",g:"n"},
+  {h:"누리",r:"nuri",s:["nu","ri"],n:"nr",g:"n"},
+  {h:"하온",r:"haon",s:["ha","on"],n:"ho",g:"n"},
+  {h:"하랑",r:"harang",s:["ha","rang"],n:"hr",g:"n"},
+];
+
+// 한국어 단어/별명
+const KR_WORDS = [
+  {h:"짱이",r:"zzangi"}, {h:"귀요미",r:"guyomi"}, {h:"예쁜이",r:"yeppeuni"},
+  {h:"공주",r:"gongju"}, {h:"감성",r:"gamseong"}, {h:"일상",r:"ilsang"},
+  {h:"별이",r:"byeori"}, {h:"달이",r:"dari"}, {h:"봄날",r:"bomnal"},
+  {h:"빛나",r:"bitna"}, {h:"사랑이",r:"sarangi"}, {h:"행복",r:"haengbok"},
+  {h:"달달",r:"daldal"}, {h:"솜사탕",r:"somsatang"}, {h:"하늘이",r:"haneuri"},
+  {h:"바다",r:"bada"}, {h:"향기",r:"hyanggi"}, {h:"꿈이",r:"kkumi"},
+  {h:"노을",r:"noeul"}, {h:"새벽",r:"saebyeok"}, {h:"여름",r:"yeoreum"},
+  {h:"가을",r:"gaeul"}, {h:"빛",r:"bit"}, {h:"꽃",r:"kkot"},
+  {h:"달",r:"dal"}, {h:"별",r:"byeol"}, {h:"숲",r:"sup"},
+  {h:"구름",r:"gureum"}, {h:"바람",r:"baram"}, {h:"물빛",r:"mulbit"},
+  {h:"햇살",r:"haetsal"}, {h:"이슬",r:"isul"}, {h:"눈꽃",r:"nunkkot"},
+  {h:"솜털",r:"somteol"}, {h:"비밀",r:"bimil"}, {h:"설렘",r:"seollem"},
+  {h:"오늘",r:"oneul"}, {h:"내일",r:"naeil"}, {h:"기억",r:"gieok"},
+  {h:"추억",r:"chueok"}, {h:"낭만",r:"nangman"}, {h:"청춘",r:"cheonchun"},
+  {h:"소녀",r:"sonyeo"}, {h:"소년",r:"sonyeon"}, {h:"천사",r:"cheonsa"},
+  {h:"요정",r:"yojeong"}, {h:"달빛",r:"dalbit"}, {h:"별빛",r:"byeolbit"},
+  {h:"보름달",r:"boreumdal"}, {h:"새벽별",r:"saebyeokbyeol"},
+  // 추가
+  {h:"두근",r:"dugeun"}, {h:"설설",r:"seolseol"}, {h:"몽글",r:"monggeul"},
+  {h:"뭉클",r:"mungkeul"}, {h:"반짝",r:"banjjak"}, {h:"찰랑",r:"challang"},
+  {h:"포근",r:"pogeun"}, {h:"아늑",r:"aneuk"}, {h:"보드",r:"bodeu"},
+  {h:"눈부심",r:"nunbusim"}, {h:"황홀",r:"hwanghol"}, {h:"몽환",r:"monghwan"},
+  {h:"순간",r:"sungan"}, {h:"인연",r:"inyeon"}, {h:"운명",r:"unmyeong"},
+  {h:"축복",r:"chukbok"}, {h:"희망",r:"huimang"}, {h:"기적",r:"gijeok"},
+  {h:"소소",r:"soso"}, {h:"담담",r:"damdam"}, {h:"잔잔",r:"janijan"},
+  {h:"살랑",r:"sallang"}, {h:"알콩",r:"alkong"}, {h:"달콩",r:"dalkong"},
+  {h:"따숩",r:"ttasup"}, {h:"뽀송",r:"bbosong"}, {h:"몽몽",r:"mongmong"},
+  {h:"냥이",r:"nyangi"}, {h:"강쥐",r:"gangjwi"}, {h:"호랑이",r:"horangi"},
+  {h:"토끼",r:"tokki"}, {h:"고양이",r:"goyangi"}, {h:"판다",r:"panda"},
+  {h:"코알라",r:"koala"}, {h:"햄스터",r:"hamster"}, {h:"다람쥐",r:"daramjwi"},
+  {h:"봉봉",r:"bongbong"}, {h:"퐁당",r:"pongdang"}, {h:"퐁퐁",r:"pongpong"},
+  {h:"방실",r:"bangsil"}, {h:"통통",r:"tongtong"}, {h:"콩콩",r:"kongkong"},
+  {h:"솔솔",r:"solsol"}, {h:"봄봄",r:"bombom"}, {h:"꼬마",r:"kkoma"},
+  // 감정/느낌 추가
+  {h:"두근두근",r:"dugeundugeun"}, {h:"설레임",r:"seolreim"}, {h:"뭉클함",r:"mungkeulham"},
+  {h:"반짝반짝",r:"banjjakbanjjak"}, {h:"찰랑찰랑",r:"challangchallang"}, {h:"포근함",r:"pogeunham"},
+  {h:"아늑함",r:"aneukham"},
+  // 자연 확장
+  {h:"이슬비",r:"isulbi"}, {h:"안개",r:"angae"}, {h:"새벽이슬",r:"saebyeokisul"},
+  {h:"고요함",r:"goyoham"}, {h:"물안개",r:"mulangae"}, {h:"여름비",r:"yeoreumbi"},
+  {h:"겨울밤",r:"gyeoulbam"}, {h:"가을하늘",r:"gaeulhaneul"},
+  // 음식/계절
+  {h:"달고나",r:"dalgona"}, {h:"호떡",r:"hotteok"},
+  {h:"봄바람",r:"bombaram"}, {h:"여름밤",r:"yeoreumbam"}, {h:"가을향기",r:"gaeulhyanggi"},
+  {h:"겨울바다",r:"gyeoulbada"},
+  // 일상
+  {h:"취미",r:"chwimi"}, {h:"여행",r:"yeohaeng"}, {h:"기록",r:"girok"},
+  {h:"새벽",r:"saebyeok"}, {h:"커피",r:"keopi"}, {h:"산책",r:"sanchaek"}, {h:"독서",r:"dokseo"},
+];
+
+// 닉네임 (별명) — 실제 이름 아닌 귀여운 닉네임
+const NICKNAMES = [
+  {h:"뿡뿡이",r:"bbungbbung"}, {h:"곰돌이",r:"gomdori"}, {h:"냥냥이",r:"nyangnyang",g:"f"},
+  {h:"멍멍이",r:"meongmeong"}, {h:"귀염둥이",r:"gwiyeomdungi",g:"f"}, {h:"깜찍이",r:"kkamjjiki",g:"f"},
+  {h:"두부",r:"dubu"}, {h:"치즈",r:"chijeu"}, {h:"초코",r:"choko"},
+  {h:"푸딩",r:"puding"}, {h:"솜이",r:"somi",g:"f"}, {h:"뭉치",r:"munchi"},
+  {h:"뚱이",r:"ttungi"}, {h:"쫑이",r:"jjongi"}, {h:"콩이",r:"kongi"},
+  {h:"팥이",r:"pati"}, {h:"밤이",r:"bami"}, {h:"호두",r:"hodu"},
+  {h:"쑥이",r:"ssuki"}, {h:"진달래",r:"jindalrae",g:"f"}, {h:"쑥쑥",r:"ssukssuk"},
+  {h:"뽀미",r:"bbomi",g:"f"}, {h:"뽀뽀",r:"bbobbo",g:"f"}, {h:"쭈쭈",r:"jjujju",g:"f"},
+  {h:"루루",r:"ruru"}, {h:"미미",r:"mimi",g:"f"}, {h:"나나",r:"nana",g:"f"},
+  {h:"모모",r:"momo"}, {h:"코코",r:"koko"}, {h:"망고",r:"mango"},
+  {h:"딸기",r:"ttalgi",g:"f"}, {h:"복숭아",r:"boksungah",g:"f"}, {h:"수박",r:"subak"},
+  {h:"참외",r:"chamoe"}, {h:"레몬",r:"remon"}, {h:"자두",r:"jadu",g:"f"},
+  {h:"앵두",r:"aengdu",g:"f"}, {h:"포도",r:"podo"}, {h:"키위",r:"kiwi"},
+  {h:"바나나",r:"banana"}, {h:"파인애플",r:"painaepeul"}, {h:"블루베리",r:"blueberry"},
+  {h:"코뿔소",r:"kopulso"}, {h:"하마",r:"hama"}, {h:"기린",r:"girin"},
+  {h:"고슴도치",r:"goseumdochi"}, {h:"너구리",r:"neoguri"}, {h:"여우",r:"yeou",g:"f"},
+  {h:"부엉이",r:"bueongyi",g:"f"}, {h:"펭귄",r:"penggwin"}, {h:"물개",r:"mulgae"},
+  {h:"바다사자",r:"badasaja"}, {h:"돌고래",r:"dolgorae"}, {h:"복어",r:"bogeo"},
+  {h:"금붕어",r:"geumbungeo"}, {h:"문어",r:"muneo"}, {h:"고등어",r:"godeungeo"},
+  {h:"떡볶이",r:"tteokbokki"}, {h:"순대",r:"sundae"}, {h:"김밥",r:"gimbap"},
+  {h:"라면",r:"ramyeon"}, {h:"삼겹살",r:"samgyeopsal"}, {h:"치킨",r:"chikin"},
+  {h:"탕수육",r:"tangsooyuk"}, {h:"짜장면",r:"jjajangmyeon"}, {h:"만두",r:"mandu"},
+  // 신규 여성 전용
+  {h:"병아리",r:"byeongari",g:"f"}, {h:"나비",r:"nabi",g:"f"},
+  {h:"꽃분이",r:"kkotbuni",g:"f"}, {h:"젤리",r:"jelli",g:"f"},
+  {h:"사탕이",r:"satangi",g:"f"}, {h:"감귤이",r:"gamgyuli",g:"f"},
+  {h:"체리",r:"cherry",g:"f"}, {h:"마카롱",r:"macarong",g:"f"},
+  {h:"도나쓰",r:"donatsu",g:"f"}, {h:"복실이",r:"bokshili",g:"f"},
+  {h:"쪼꼬미",r:"jjoggomi",g:"f"}, {h:"나비야",r:"nabiya",g:"f"},
+  {h:"봉숭아",r:"bongsungah",g:"f"}, {h:"달링이",r:"dallingi",g:"f"},
+  // 신규 남성 전용
+  {h:"철이",r:"cheori",g:"m"}, {h:"장군이",r:"jangguni",g:"m"},
+  {h:"호돌이",r:"hodori",g:"m"}, {h:"공룡이",r:"gongnyongi",g:"m"},
+  {h:"감자",r:"gamja",g:"m"}, {h:"국밥이",r:"gukbabi",g:"m"},
+  {h:"오소리",r:"osori",g:"m"}, {h:"짱구",r:"zzanggu",g:"m"},
+  {h:"두더지",r:"dudeoji",g:"m"}, {h:"도깨비",r:"dokkaebi",g:"m"},
+  {h:"독수리",r:"doksuri",g:"m"}, {h:"뚝배기",r:"ttukbaegi",g:"m"},
+  {h:"근육맨",r:"geunyungman",g:"m"}, {h:"불곰",r:"bulgom",g:"m"},
+];
+
+// 영어 단어 — 한국인이 실제로 쓰는 단어 위주, 이질적 서양 이름 제외
+const ENG_WORDS = [
+  // 감정/형용사
+  "happy","lucky","cute","cozy","soft","tiny","sweet","warm","chill","bold",
+  "good","cool","wild","calm","pure","bright","sunny","lovely","gentle","rosy",
+  // 동물 (한국 인스타에서 인기)
+  "bunny","kitty","bear","sheep","duck","deer","panda","fox","puppy","lamb",
+  "dove","seal","whale","lark","fawn","cub","mochi","birdy","tabby","teddy",
+  // 음식/음료
+  "latte","cocoa","milk","candy","cream","cookie","bread","jam","cola","bun",
+  "berry","cherry","peach","vanilla","butter","pudding","scone","caffe","syrup",
+  // 자연/분위기
+  "moon","star","snow","rain","cloud","sky","sea","dawn","dusk","mist","haze",
+  "glow","bloom","frost","dew","wave","leaf","rose","daisy","ivy","coral",
+  "nova","echo","bliss","spark","grace","jade","amber","pearl","ruby","opal",
+  // 한국인이 쓰는 짧은 영어 별명
+  "tony","jay","elly","nana","lena","ken","ace","ray","leo","kai","elle","dana",
+  "eden","casey","ash","drew","quinn","robin","remy","alex","sam","ren","nico",
+  // 기타
+  "honey","baby","bebe","mini","pink","fairy","dream","magic","angel","pop",
+  "coco","silk","tea","key","vine","pin","glam","charm","whim","daze",
+  // 동물 추가
+  "otter","penguin","hamster","pigeon","raven","gecko","newt","vole","mink","ibis",
+  // 음식 추가
+  "matcha","sorbet","toffee","nougat","praline","truffle","ganache","madeleine",
+  // 자연 추가
+  "petal","thorn","fern","moss","reed","brine","flint","crest","vale","glen",
+  // 색감/느낌
+  "indigo","sienna","ochre","teal","slate","taupe","ecru","buff","khaki","bisque",
+  // 행동/상태
+  "drift","float","hush","lull","doze","meow","purr","yawn","nap","wink",
+  // 감성 추가
+  "velvet","pixel","indie","blur","neon","haze","mist","prism","glow","flare","spark",
+  // 자연 추가
+  "cedar","aspen","maple","willow","birch","pine","fern","sage","ember","bloom","frost",
+  // 새 트렌드
+  "vibe","chill","cozy","mellow","mood","aura","core","pop","zest","joy","zen",
+  "glimmer","luster","serene","breezy","misty","dewy","crisp","vivid","pastel",
+  "flicker","shimmer","twinkle","ripple","murmur","whisper","flutter","dazzle",
+];
+
+// 랜덤 음절 풀 — 한국어 발음 패턴 기반
+const KR_SYLLS = [
+  "ga","gi","go","gu","ge","gyo","gyu","gwa","gwi",
+  "na","ni","no","nu","ne","nya","nyo","nyu",
+  "da","di","do","du","de","dyo","dyu",
+  "ra","ri","ro","ru","re","ryo","ryu",
+  "ma","mi","mo","mu","me","myo","myu",
+  "ba","bi","bo","bu","be","byo","byu",
+  "sa","si","so","su","se","syo","syu",
+  "a","i","o","u","e","ya","yo","yu","yeo",
+  "ja","ji","jo","ju","je","jyo","jyu",
+  "cha","chi","cho","chu","che",
+  "ka","ki","ko","ku","ke",
+  "ta","ti","to","tu","te",
+  "pa","pi","po","pu","pe",
+  "ha","hi","ho","hu","he","hyo","hyu",
+  "san","min","jun","bin","won","han","rin","sol","yun","jin",
+  "seon","yeon","hyeon","chan","ran","man","dan","ban","pan",
+  "gam","bam","ram","jam","ham","sam","dam","nam",
+  "gong","dong","song","bong","hong","jong",
+  "gang","bang","rang","jang","hang","sang","dang","nang",
+  "sin","bin","rin","min","jin","din",
+  "sul","mul","bul","rul","jul","pul","nul","gul",
+  "tok","bok","rok","mok","dok","nok","gok","jok",
+  "tal","bal","ral","mal","dal","nal","gal","jal","sal",
+  "tam","bam","ram","jam","gam","nam","sam",
+  // 추가 음절 (받침 포함)
+  "rin","lin","min","sin","bin","gin","kin","pin","tin","win",
+  "rong","long","bong","gong","mong","song","tong","yong","dong","jong",
+  "ruk","luk","muk","suk","buk","guk","nuk","tuk","juk","kuk",
+  "rang","lang","mang","sang","bang","gang","nang","tang","yang","dang",
+  "reun","leun","meun","seun","beun","geun","neun","teun","jeun",
+  "ryeo","lyeo","myeo","syeo","byeo","gyeo","nyeo","tyeo","jyeo","hyeo",
+  "rae","nae","mae","sae","bae","gae","dae","jae","hae","yae",
+  "rui","lui","mui","sui","bui","gui","nui","tui","jui","hui",
+  "rul","lul","mul","sul","bul","gul","nul","tul","jul","hul",
+  "ron","lon","mon","son","bon","gon","non","ton","jon","hon",
+];
+
+// 감성 접미어
+const AESTHETICS = [
+  "ilsang","gamseong","daily","life","studio","pic","snap","film",
+  "log","vibe","mood","note","archive","diary","moment","frame",
+  "lens","view","side","edit","cut","reel","feed","drop",
+];
+
+// 세퍼레이터 풀
+const SEPS_GENERAL  = [".", "_", "._.", "_.", "__", ""];
+const SEPS_SIMPLE   = [".", "_", ""];
+const SEPS_CUTE     = ["._.", "__", "._", "_.", "_._"];
+const SEPS_NONEMPTY = [".", "_", "._.", "_.", "__"];
+const FRAMES        = ["oo","ii","ee","aa","xx","zz","vv","yy","uu","pp","bb","mm"];
+
+// ════════════════════════════════════════════════════
+// 두벌식 → QWERTY
+// ════════════════════════════════════════════════════
+
+const CHO  = ["r","R","s","e","E","f","a","q","Q","t","T","d","w","W","c","z","x","v","g"];
+const JUNG = ["k","o","i","O","j","p","u","P","h","hk","ho","hl","y","n","nj","np","nl","b","m","ml","l"];
+const JONG  = ["","r","R","rt","s","sw","sg","e","f","fr","fa","fq","ft","fx","fv","fg","a","q","qt","t","T","d","w","c","z","x","v","g"];
+
+function hangulToQwerty(str) {
+  let out = "";
+  for (const ch of str) {
+    const cp = ch.codePointAt(0);
+    if (cp >= 0xAC00 && cp <= 0xD7A3) {
+      const idx = cp - 0xAC00;
+      out += CHO[Math.floor(idx / 28 / 21)] + JUNG[Math.floor(idx / 28) % 21] + JONG[idx % 28];
+    } else { out += ch; }
+  }
+  return out.toLowerCase();
+}
+
+// ════════════════════════════════════════════════════
+// 유틸리티
+// ════════════════════════════════════════════════════
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function prob(p) { return Math.random() < p; }
+
+// 문자열을 n개 조각으로 분절
+function splitToParts(str, n) {
+  n = Math.min(n, str.length);
+  if (n <= 1) return [str];
+  const positions = new Set();
+  let tries = 0;
+  while (positions.size < n - 1 && tries < 40) {
+    positions.add(randInt(1, str.length - 1));
+    tries++;
+  }
+  const cuts = [...positions].sort((a, b) => a - b);
+  const parts = [];
+  let prev = 0;
+  for (const c of cuts) { if (c > prev) parts.push(str.slice(prev, c)); prev = c; }
+  parts.push(str.slice(prev));
+  return parts.filter(p => p.length > 0);
+}
+
+// 배열을 랜덤 세퍼레이터로 연결
+function joinParts(parts, pool) {
+  let r = "";
+  for (let i = 0; i < parts.length; i++) {
+    r += parts[i];
+    if (i < parts.length - 1) r += rand(pool);
+  }
+  return r;
+}
+
+// 숫자 문자열 분절 — 최대 1회 (e.g. 98→9.8, 9804→98.04)
+function fragNum(numStr) {
+  if (numStr.length <= 1 || prob(0.45)) return numStr;
+  const sep = rand([".", "_"]);
+  const at = randInt(1, numStr.length - 1);
+  return numStr.slice(0, at) + sep + numStr.slice(at);
+}
+
+// 생년 숫자 생성 — 최소 4자리 (2자리 단독 금지)
+function birthNum() {
+  const yrs  = ["94","95","96","97","98","99","00","01","02","03","04","05","93","92","91"];
+  const mths = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+  const days  = ["01","04","07","09","11","14","17","18","21","22","25","28"];
+  const yr = rand(yrs);
+  return prob(0.5) ? yr + rand(mths) : yr + rand(mths) + rand(days);
+}
+
+// 선택적 leet 치환 (최대 1곳, 25% 확률)
+function leet(str) {
+  if (prob(0.75)) return str;
+  const map = [["l","1"],["o","0"],["i","1"],["e","3"],["a","4"]];
+  const [f, t] = rand(map);
+  return str.replace(f, t); // 첫 번째 등장만
+}
+
+// ════════════════════════════════════════════════════
+// 인스타그램 ID 검증 (공식 규칙 기반)
+// ════════════════════════════════════════════════════
+
+function isComplexEnough(id) {
+  const hasSep   = /[._]/.test(id);
+  const numLen   = (id.match(/\d+/g) || []).join("").length;
+  const alphaLen = id.replace(/[\d._]/g, "").length;
+  // 구분자 없고 숫자도 짧으면 (≤3자리) 단순 아이디 → 거부
+  if (!hasSep && numLen < 4 && id.length < 7) return false;
+  // 순수 알파벳만 (숫자·구분자 전혀 없음) → 이미 취득 가능성 거의 없음
+  if (numLen === 0 && !hasSep) return false;
+  return true;
+}
+
+function isValidId(id) {
+  const sepCount = (id.match(/[._]/g) || []).length;
+  return (
+    id.length >= 6 &&
+    id.length <= 11 &&
+    /^[a-z0-9._]+$/.test(id) &&
+    !/\.\./.test(id) &&
+    !/^\./.test(id) &&
+    !/\.$/.test(id) &&
+    sepCount <= 3 &&
+    isComplexEnough(id)
+  );
+}
+
+function cleanId(id) {
+  return id
+    .toLowerCase()
+    .replace(/[^a-z0-9._]/g, "")   // 허용 문자 외 제거
+    .replace(/\.{2,}/g, ".")        // 연속 점 → 단일 점
+    .replace(/_{3,}/g, "__")        // 3중+ 언더스코어 → 이중
+    .replace(/^\.+/, "")            // 앞쪽 점 제거
+    .replace(/\.+$/, "")            // 뒤쪽 점 제거
+    .slice(0, 11);
+}
+
+// ════════════════════════════════════════════════════
+// 전략 함수들
+// ════════════════════════════════════════════════════
+
+// 전략 1: 이름 미세 분해 (핵심 전략)
+// e.un_ji9.8  seo_yeon98  park.min98
+function stratFragmented(fam, given) {
+  const num = fragNum(birthNum());
+  // 짧은 이름 문자열 우선 (길이 제한)
+  const namePool = [
+    given.r,
+    given.s[0] + given.s[given.s.length - 1],
+    fam.r + given.s[0],
+    fam.r.slice(0, 3) + given.r,
+  ];
+  const nameStr = rand(namePool);
+  // 최대 3조각으로 분절
+  const nParts = randInt(2, Math.min(3, nameStr.length));
+  const parts = splitToParts(nameStr, nParts);
+  // 숫자를 랜덤 위치에 삽입
+  const insertAt = randInt(0, parts.length);
+  parts.splice(insertAt, 0, num);
+  // 각기 다른 세퍼레이터로 연결
+  let result = "";
+  for (let i = 0; i < parts.length; i++) {
+    result += parts[i];
+    if (i < parts.length - 1) result += rand(SEPS_GENERAL);
+  }
+  return { id: cleanId(leet(result)), label: fam.h + given.h };
+}
+
+// 전략 2: 두벌식 → QWERTY 키보드 전환
+// 김은지 → rlasdw  박지수 → qkrwltn
+function stratKeyboard(fam, given) {
+  const hangul = fam.h + given.h;
+  let qwerty = hangulToQwerty(hangul);
+  // 숫자 항상 추가 (최소 4자리) + 선택적 구분자
+  const num = birthNum();
+  const sfx = rand([num, "_" + num, "." + num, "__" + num, "_log" + num]);
+  qwerty += sfx;
+  // 선택적 이름 분절
+  if (prob(0.5)) qwerty = joinParts(splitToParts(qwerty, 2), SEPS_SIMPLE);
+  return { id: cleanId(leet(qwerty)), label: fam.h + given.h };
+}
+
+// 전략 3: 영어단어 + 이름 조각 + 날짜
+// happy._.jini9844  lucky_soyeon.02  baby_._park98
+function stratEngNick(fam, given) {
+  const eng = rand(ENG_WORDS);
+  const num = birthNum();
+  const nick = rand([
+    given.s[given.s.length - 1],        // 마지막 음절
+    given.s[0],                          // 첫 음절
+    given.r.slice(0, 4),                 // 이름 앞 4자
+    fam.r + given.s[0],                  // 성 + 첫 음절
+  ]);
+  const sep1 = rand(SEPS_CUTE);
+  const sep2 = rand(SEPS_GENERAL);
+  const variants = [
+    () => eng + sep1 + nick + num,
+    () => eng + sep1 + fam.r + nick + num,
+    () => eng + sep2 + nick + num,
+    () => fam.r + sep1 + eng + num,
+    () => nick + sep1 + eng + num,
+    () => eng + nick + num,
+  ];
+  return { id: cleanId(rand(variants)()), label: fam.h + given.h };
+}
+
+// 전략 4: 한국어 단어 + 분절 숫자 / 이름 힌트
+// gamseong_9.8  ilsang.lee.sy  byeori__kim98
+function stratKrWord(fam, given) {
+  const word = rand(KR_WORDS);
+  const num = fragNum(birthNum());
+  const hint = rand([given.n, fam.i + given.n, fam.r.slice(0, 3), given.s[0]]);
+  const sep  = rand(SEPS_GENERAL);
+  const variants = [
+    () => word.r + sep + num,
+    () => fam.r + sep + word.r + num,
+    () => word.r + sep + hint,
+    () => word.r + sep + fam.r,
+    () => leet(word.r) + sep + num,
+    () => given.s[0] + sep + word.r + num,
+    () => word.r + "__" + hint,
+    () => hint + sep + word.r,
+  ];
+  return { id: cleanId(rand(variants)()), label: fam.h + given.h };
+}
+
+// 전략 5: 프레임 데코레이션
+// oo.kimzzang.ii  __.byeori.lee.__  xx.leejini.xx
+function stratFrame(fam, given) {
+  const frame = rand(FRAMES);
+  const word  = rand(KR_WORDS);
+  const nick  = rand([
+    given.s[0] + given.s[given.s.length - 1],
+    given.r.slice(0, 4),
+    given.r,
+  ]);
+  const core = rand([
+    fam.r + nick,
+    fam.r + word.r,
+    nick + word.r,
+    fam.r + given.r.slice(0, 3),
+  ]);
+  const sep = rand([".", "_"]);
+  const variants = [
+    () => frame + sep + core + sep + frame,
+    () => frame + sep + core,
+    () => core + sep + frame,
+    () => frame + core + frame,
+    () => "__" + sep + core + "__",
+    () => frame + sep + fam.r + sep + word.r + sep + frame,
+  ];
+  return { id: cleanId(rand(variants)()), label: fam.h + given.h };
+}
+
+// 전략 6: 감성단어 + 이니셜 힌트 + 분절 숫자
+// gamseong_._sy97  ilsang.l3e.mj98  daily_._kang.sy
+function stratAesthetic(fam, given) {
+  const aes = rand(AESTHETICS);
+  const num = fragNum(birthNum());
+  const hint = rand([
+    given.n,
+    fam.i + given.n,
+    fam.r.slice(0, 3),
+    fam.r + given.s[0],
+  ]);
+  const sep = rand(SEPS_GENERAL);
+  const csep = rand(SEPS_CUTE);
+  const variants = [
+    () => aes + sep + hint + num,
+    () => aes + sep + num + sep + hint,
+    () => hint + sep + aes,
+    () => fam.r + sep + aes + sep + num,
+    () => aes + csep + hint,
+    () => leet(aes) + sep + hint + num,
+    () => aes + sep + leet(hint) + num,
+    () => hint + csep + aes + num,
+  ];
+  return { id: cleanId(rand(variants)()), label: fam.h + given.h };
+}
+
+// 전략 7: 이름 음절 창의적 조합
+// seo_._yeon.98  min.j98_un  chae_won.02_
+function stratSyllableMix(fam, given) {
+  const s0 = given.s[0];
+  const s1 = given.s[given.s.length - 1];
+  const num = fragNum(birthNum());
+  const sep = rand(SEPS_GENERAL);
+  const csep = rand(SEPS_CUTE);
+  const variants = [
+    () => s0 + csep + s1 + sep + num,
+    () => s0 + sep + fam.r + sep + s1 + num,
+    () => fam.r + sep + s0 + csep + s1,
+    () => s1 + sep + num + sep + s0,
+    () => s0 + num + csep + s1,
+    () => leet(s0 + sep + s1) + sep + num,
+    () => s0 + "_" + s0 + sep + num,   // 첫 음절 반복 (귀여운 느낌)
+    () => fam.r.slice(0,2) + sep + s0 + sep + s1 + num,
+  ];
+  return { id: cleanId(rand(variants)()), label: fam.h + given.h };
+}
+
+// 전략 8: 닉네임 기반
+// bbungbbung972  gomdori.98  choko__kim03
+function stratNickname(fam, given) {
+  const pool = nickPool();
+  const nick = rand(pool.length ? pool : NICKNAMES);
+  const num = birthNum();
+  const sep = rand(SEPS_GENERAL);
+  const variants = [
+    () => nick.r + num,
+    () => nick.r + sep + num,
+    () => fam.r + nick.r + num,
+    () => nick.r + sep + fam.r,
+    () => leet(nick.r) + num,
+    () => nick.r + fragNum(num),
+    () => given.s[0] + sep + nick.r + num,
+    () => nick.r + "__" + num,
+  ];
+  return { id: cleanId(rand(variants)()), label: nick.h };
+}
+
+// 전략 9: 랜덤 음절 조합 — 한국어 발음 패턴 기반
+// samin97  joribam04  garumin_98  toksal01
+function stratRandomSyll(fam, given) {
+  const numSylls = randInt(2, 4);
+  const sylls = Array.from({length: numSylls}, () => rand(KR_SYLLS));
+  // 항상 성씨 요소를 첫 음절에, 이름 첫 음절을 마지막에 삽입 → 레이블과 ID 연결고리 보장
+  sylls[0] = rand([fam.r.slice(0,2), fam.i]);
+  sylls[sylls.length - 1] = given.s[0];
+  const base = sylls.join(rand(["","_","."]));
+  const num = birthNum();
+  const variants = [
+    () => base + num,
+    () => base + "_" + num,
+    () => base + "." + fragNum(num),
+    () => num + base,
+    () => base,
+  ];
+  return { id: cleanId(leet(rand(variants)())), label: fam.h + given.h };
+}
+
+// ════════════════════════════════════════════════════
+// 전략 선택기 (최근 2회 제외)
+// ════════════════════════════════════════════════════
+
+const STRATEGIES = [
+  stratFragmented, stratKeyboard, stratEngNick,
+  stratKrWord, stratFrame, stratAesthetic, stratSyllableMix,
+  stratNickname, stratRandomSyll,
+];
+// stratNickname(index 7) weight 0.4 → ~4.8% probability
+const STRATEGY_WEIGHTS = [1, 1, 1, 1, 1, 1, 1, 0.4, 1];
+let recentIdx = [];
+
+function pickStrategy() {
+  const allIdx = STRATEGIES.map((_, i) => i);
+  const pool = allIdx.filter(i => !recentIdx.slice(-2).includes(i));
+  const candidates = pool.length ? pool : allIdx;
+  // weighted random pick
+  const totalWeight = candidates.reduce((s, i) => s + STRATEGY_WEIGHTS[i], 0);
+  let r = Math.random() * totalWeight;
+  let idx = candidates[candidates.length - 1];
+  for (const i of candidates) {
+    r -= STRATEGY_WEIGHTS[i];
+    if (r <= 0) { idx = i; break; }
+  }
+  recentIdx.push(idx);
+  if (recentIdx.length > 5) recentIdx.shift();
+  return STRATEGIES[idx];
+}
+
+// ════════════════════════════════════════════════════
+// 중복 방지 + 생성기
+// ════════════════════════════════════════════════════
+
+const STORAGE_KEY = "kr_ig_ids_v4";
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveHistory(h) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+}
+
+// 성별 필터 상태
+let genderFilter = "all";
+
+function setGender(g, btn) {
+  genderFilter = g;
+  document.querySelectorAll(".gf").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function namePool() {
+  if (genderFilter === "all") return GIVEN_NAMES;
+  return GIVEN_NAMES.filter(n => n.g === genderFilter || n.g === "n");
+}
+
+function nickPool() {
+  if (genderFilter === "all") return NICKNAMES;
+  return NICKNAMES.filter(n => !n.g || n.g === genderFilter || n.g === "n");
+}
+
+// ════════════════════════════════════════════════════
+// BIO 생성
+// ════════════════════════════════════════════════════
+
+const BIOS_STATIC = [
+  "일상을 기록해요","하루하루 소중하게","소소한 일상","느리게 살기",
+  "좋아하는 것들로 채운 일상","달달한 하루하루","봄처럼 살기",
+  "오늘도 감사한 하루","내 삶의 작은 기록들","잠시 쉬어가는 공간",
+  "카페 투어 중","맛집 탐방 중","여행을 좋아해요",
+  "책 읽고 커피 마시기","영화 | 음악 | 여행","취미로 사진 찍음",
+  "운동하는 중","먹고 자고 반복","그냥 사는 사람",
+  "daily life","just living","seoul-based","coffee & cameras",
+  "living slowly","ordinary days","finding joy in small things",
+  "일상 기록 중 📷","카페 투어 🧋","먹는 거 좋아함 🍜",
+  "여행 좋아해요 ✈️","커피 한 잔의 여유 ☕","오늘도 화이팅 ✨",
+  "고양이 집사 🐱","강아지랑 살아요 🐶","책 읽는 중 📚",
+  "봄이 좋아 🌸","음악 듣는 중 🎵","하루하루 예쁘게 🌿",
+  "소소한 행복 🍀","달달한 하루 🍯","잠시 쉬어가요 ☁️",
+  "daily life 🌿","just vibing ✨","seoul 🌙",
+  "강아지 집사 🐶","고양이 좋아 🐱","맛집 탐방 🍜",
+  "사진 찍기 좋아함 📸","여행 중 ✈️","커피 좋아 ☕",
+];
+
+const BIO_LOCATION = ["서울","경기","부산","인천","대구","대전","광주","","","",""];
+const BIO_MAIN = [
+  "카페 좋아함","맛집 탐방","여행","사진 찍기","운동하는 중",
+  "책 읽기","음악 듣기","드라마 정주행","고양이랑 삶","강아지 집사",
+  "일상 기록","디자이너","대학생","회사원","취미 사진",
+  "먹고 자고 반복","그냥 사람","살고있음","24살","23살","22살",
+];
+const BIO_EMOJI_SUFFIX = ["","","","","☕","🌿","📷","🍜","✨","🌸","🐱","🐶","📚"];
+const NAME_EMOJIS = ["🌸","✨","🌿","💫","🌙","⭐","🍀","🦋","🎀","💕","🌺"];
+
+function genBioDynamic() {
+  const loc  = rand(BIO_LOCATION);
+  const main = rand(BIO_MAIN);
+  const emo  = rand(BIO_EMOJI_SUFFIX);
+  return (loc ? loc + " / " : "") + main + (emo ? " " + emo : "");
+}
+
+function genBio() {
+  if (!prob(0.55)) return "";
+  if (prob(0.60)) return rand(BIOS_STATIC);
+  return genBioDynamic();
+}
+
+function formatLabel(label) {
+  return prob(0.05) ? label + " " + rand(NAME_EMOJIS) : label;
+}
+
+function generateOne(usedSet) {
+  const MAX = 100;
+  for (let i = 0; i < MAX; i++) {
+    const fam     = rand(FAMILY_NAMES);
+    const stratFn = pickStrategy();
+    const pool  = namePool();
+    const given = rand(pool);
+    let result;
+    try { result = stratFn(fam, given); }
+    catch { continue; }
+    const { id, label } = result;
+    if (id && isValidId(id) && !usedSet.has(id)) {
+      usedSet.add(id);
+      return { id, label: formatLabel(label), bio: genBio(), ts: Date.now() };
+    }
+  }
+  return null; // 100회 실패 시 skip
+}
+
+// ════════════════════════════════════════════════════
+// UI
+// ════════════════════════════════════════════════════
+
+let currentBatch = [];
+
+function generateBatch() {
+  const count = Math.min(parseInt(document.getElementById("count").value) || 30, 5000);
+  const history = loadHistory();
+  const usedSet = new Set(history.map(e => e.id));
+
+  const batch = [];
+  for (let i = 0; i < count; i++) {
+    const entry = generateOne(usedSet);
+    if (entry) batch.push(entry);
+  }
+
+  history.push(...batch);
+  saveHistory(history);
+  currentBatch = batch;
+
+  renderList(batch);
+  document.getElementById("result-info").textContent =
+    `${batch.length} generated` + (batch.length < count ? ` (${count - batch.length} failed)` : "");
+  document.getElementById("history-info").textContent = `History: ${history.length}`;
+}
+
+function renderList(batch) {
+  const el = document.getElementById("output");
+  if (!batch.length) {
+    el.innerHTML = '<div class="empty">No IDs generated.</div>';
+    return;
+  }
+  const header = `<div class="id-table-head"><span>username</span><span>name</span><span>bio</span></div>`;
+  const rows = batch.map(e =>
+    `<div class="id-row">
+      <span class="id-val">${e.id}</span>
+      <span class="id-name">${e.label}</span>
+      <span class="id-bio-cell">${e.bio || ""}</span>
+    </div>`
+  ).join("");
+  el.innerHTML = header + rows;
+}
+
+function copyOne(id, btn) {
+  navigator.clipboard.writeText(id).then(() => {
+    btn.textContent = "✓";
+    btn.classList.add("done");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("done"); }, 1300);
+  });
+}
+
+function copyAll(btn) {
+  if (!currentBatch.length) return;
+  const text = currentBatch.map(e => [e.id, e.label, e.bio || ""].join("\t")).join("\n");
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function exportCSV() {
+  const history = loadHistory();
+  if (!history.length) { alert("No history to export."); return; }
+  const rows = ["\uFEFFusername,name,bio,generated_at"];
+  history.forEach(e => {
+    const bio = (e.bio || "").replace(/"/g, '""');
+    rows.push(`${e.id},"${e.label}","${bio}",${new Date(e.ts || Date.now()).toLocaleString("ko-KR")}`);
+  });
+  const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url; a.download = "korean_ig_ids.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetLocalStorage() {
+  localStorage.removeItem(STORAGE_KEY);
+  currentBatch = [];
+  renderList([]);
+  document.getElementById("result-info").textContent = "No IDs generated yet";
+  document.getElementById("history-info").textContent = "";
+}
+
+// Initial history count display
+(function() {
+  const h = loadHistory();
+  if (h.length) document.getElementById("history-info").textContent = `History: ${h.length}`;
+})();
+</script>
+</body>
+</html>
