@@ -1115,7 +1115,8 @@ function generateOne(usedSet) {
     if (id && isValidId(id) && !usedSet.has(id) && prob(LEN_ACCEPT[id.length] ?? 1)) {
       usedSet.add(id);
       const label = stratFn === stratNickname ? result.label : pickLabel(result.label, given, fam);
-      return { id, label: formatLabel(label), bio: genBio(), ts: Date.now() };
+      const gender = genderFilter !== "all" ? genderFilter : given.g === "n" ? rand(["m", "f"]) : given.g;
+      return { id, gender: gender === "m" ? "male" : "female", label: formatLabel(label), bio: genBio(), ts: Date.now() };
     }
   }
   return null; // 100회 실패 시 skip
@@ -1214,13 +1215,6 @@ function copyAll(btn) {
 
 function pad2(n) { return String(n).padStart(2, "0"); }
 
-// 2026-10-12 13:12:40 (엑셀 등에서 날짜로 인식되는 형식)
-function fmtTs(ts) {
-  const d = new Date(ts || Date.now());
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ` +
-         `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-}
-
 // mode: "batch" = 이번에 생성한 것만, "all" = 저장된 전체 기록
 function exportCSV(mode) {
   const list = mode === "all" ? loadHistory() : currentBatch;
@@ -1229,8 +1223,8 @@ function exportCSV(mode) {
     return;
   }
   const q = v => '"' + String(v).replace(/"/g, '""') + '"';
-  const rows = ["\uFEFFusername,name,bio,generated_at"];
-  for (const e of list) rows.push(`${e.id},${q(e.label)},${q(e.bio || "")},${fmtTs(e.ts)}`);
+  const rows = ["\uFEFFgender,username,name,bio"];
+  for (const e of list) rows.push(`${e.gender || ""},${e.id},${q(e.label)},${q(e.bio || "")}`);
   const now = new Date();
   const stamp = `${now.getFullYear()}${pad2(now.getMonth() + 1)}${pad2(now.getDate())}-${pad2(now.getHours())}${pad2(now.getMinutes())}`;
   const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
