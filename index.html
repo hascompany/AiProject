@@ -175,7 +175,7 @@
 
   <div class="header">
     <h1>Korean Instagram ID Generator</h1>
-    <p>Korean-style · Low duplicates · Name-based</p>
+    <p>Korean-style · Low duplicates · Name-based · Up to 20,000 per run</p>
   </div>
 
   <div class="rules">
@@ -191,8 +191,10 @@
     <label>Count</label>
     <input type="number" id="count" value="500" min="1" max="20000">
     <button class="primary" id="gen-btn" onclick="generateBatch()">Generate</button>
+    <button id="stop-btn" onclick="stopGenerate()" style="display:none">Stop</button>
     <button onclick="copyAll(this)">Copy All</button>
-    <button onclick="exportCSV()">Save CSV</button>
+    <button onclick="exportCSV('batch')">Save CSV</button>
+    <button onclick="exportCSV('all')">Save All History</button>
     <button class="danger" onclick="resetLocalStorage()">Reset Storage</button>
   </div>
 
@@ -1071,16 +1073,36 @@ function formatLabel(label) {
   return prob(0.05) ? label + " " + rand(NAME_EMOJIS) : label;
 }
 
-// 이름 표기 다양화: 성+이름 / 이름만 / 랜덤 닉네임
-function pickLabel(baseLabel, given) {
-  const r = Math.random();
-  if (r < 0.30) return given.h;
-  if (r < 0.42) return rand([...nickPool(), ...KR_WORDS]).h;
-  return baseLabel;
+// 성별이 갈리는 KR_WORDS (이름 표기용 랜덤 닉네임에서만 필터링)
+const KR_WORD_G = { "공주":"f", "소녀":"f", "예쁜이":"f", "요정":"f", "소년":"m" };
+
+function wordPool() {
+  if (genderFilter === "all") return KR_WORDS;
+  return KR_WORDS.filter(w => !KR_WORD_G[w.h] || KR_WORD_G[w.h] === genderFilter);
 }
 
+function cap(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+// 이름 표기 다양화
+//  60% 성+이름(한글) · 20% 이름만 · 10% 영문 표기 · 10% 랜덤 닉네임
+function pickLabel(baseLabel, given, fam) {
+  const r = Math.random();
+  if (r < 0.20) return given.h;                                   // 이름만
+  if (r < 0.30) {                                                 // 한국 이름의 영문 표기
+    const g = cap(given.r), f = cap(fam.r), k = Math.random();
+    if (k < 0.60) return `${g} ${f}`;                             // Seoyeon Kim
+    if (k < 0.85) return `${f} ${g}`;                             // Kim Seoyeon
+    return g;                                                     // Seoyeon
+  }
+  if (r < 0.40) return rand([...nickPool(), ...wordPool()]).h;    // 랜덤 닉네임
+  return baseLabel;                                               // 성+이름
+}
+
+// 짧은 ID일수록 더 잘 통과시켜 길이 분포를 실제 계정(평균 약 8~9자)에 가깝게
+const LEN_ACCEPT = { 6: 1, 7: 1, 8: 1, 9: 0.9, 10: 0.4, 11: 0.25 };
+
 function generateOne(usedSet) {
-  const MAX = 100;
+  const MAX = 300;
   for (let i = 0; i < MAX; i++) {
     const fam     = rand(FAMILY_NAMES);
     const stratFn = pickStrategy();
@@ -1090,9 +1112,9 @@ function generateOne(usedSet) {
     try { result = stratFn(fam, given); }
     catch { continue; }
     const { id } = result;
-    if (id && isValidId(id) && !usedSet.has(id)) {
+    if (id && isValidId(id) && !usedSet.has(id) && prob(LEN_ACCEPT[id.length] ?? 1)) {
       usedSet.add(id);
-      const label = stratFn === stratNickname ? result.label : pickLabel(result.label, given);
+      const label = stratFn === stratNickname ? result.label : pickLabel(result.label, given, fam);
       return { id, label: formatLabel(label), bio: genBio(), ts: Date.now() };
     }
   }
@@ -1109,24 +1131,33 @@ const MAX_COUNT    = 20000;
 const CHUNK_SIZE   = 500;     // 이 개수마다 화면에 양보 (진행률 표시)
 const RENDER_LIMIT = 1000;    // 화면에는 앞 1000개만 표시 (전체는 Copy All / CSV)
 let generating = false;
+let cancelRequested = false;
+
+function stopGenerate() { cancelRequested = true; }
 
 async function generateBatch() {
   if (generating) return;
   generating = true;
+  cancelRequested = false;
   const btn  = document.getElementById("gen-btn");
+  const stop = document.getElementById("stop-btn");
   const info = document.getElementById("result-info");
   btn.disabled = true;
+  stop.style.display = "";
 
-  const count = Math.min(parseInt(document.getElementById("count").value) || 500, MAX_COUNT);
+  const input = document.getElementById("count");
+  const count = Math.min(Math.max(parseInt(input.value) || 500, 1), MAX_COUNT);
+  input.value = count;
   const history = loadHistory();
   const usedSet = new Set(history.map(e => e.id));
 
   const batch = [];
-  for (let i = 0; i < count; i++) {
+  let done = 0;
+  for (; done < count && !cancelRequested; done++) {
     const entry = generateOne(usedSet);
     if (entry) batch.push(entry);
-    if ((i + 1) % CHUNK_SIZE === 0) {
-      info.textContent = `Generating… ${i + 1} / ${count}`;
+    if ((done + 1) % CHUNK_SIZE === 0) {
+      info.textContent = `Generating… ${done + 1} / ${count}`;
       await new Promise(r => setTimeout(r));
     }
   }
@@ -1136,12 +1167,14 @@ async function generateBatch() {
   currentBatch = batch;
   renderList(batch);
 
-  let msg = `${batch.length} generated` + (batch.length < count ? ` (${count - batch.length} failed)` : "");
+  let msg = `${batch.length} generated` + (done < count ? ` (stopped at ${done} / ${count})` : "")
+          + (batch.length < done ? ` (${done - batch.length} failed)` : "");
   let total = history.length;
   if (status === "reset")  { msg += " · Storage full: history was reset"; total = Math.min(total, 5000); }
   if (status === "failed") { msg += " · Storage full: history not saved"; total = 0; }
   info.textContent = msg;
   document.getElementById("history-info").textContent = total ? `History: ${total}` : "";
+  stop.style.display = "none";
   btn.disabled = false;
   generating = false;
 }
@@ -1179,18 +1212,31 @@ function copyAll(btn) {
   });
 }
 
-function exportCSV() {
-  const history = loadHistory();
-  if (!history.length) { alert("No history to export."); return; }
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+// 2026-10-12 13:12:40 (엑셀 등에서 날짜로 인식되는 형식)
+function fmtTs(ts) {
+  const d = new Date(ts || Date.now());
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ` +
+         `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+}
+
+// mode: "batch" = 이번에 생성한 것만, "all" = 저장된 전체 기록
+function exportCSV(mode) {
+  const list = mode === "all" ? loadHistory() : currentBatch;
+  if (!list.length) {
+    alert(mode === "all" ? "No history to export." : "Nothing generated yet. Click Generate first.");
+    return;
+  }
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
   const rows = ["\uFEFFusername,name,bio,generated_at"];
-  history.forEach(e => {
-    const bio = (e.bio || "").replace(/"/g, '""');
-    rows.push(`${e.id},"${e.label}","${bio}",${new Date(e.ts || Date.now()).toLocaleString("ko-KR")}`);
-  });
+  for (const e of list) rows.push(`${e.id},${q(e.label)},${q(e.bio || "")},${fmtTs(e.ts)}`);
+  const now = new Date();
+  const stamp = `${now.getFullYear()}${pad2(now.getMonth() + 1)}${pad2(now.getDate())}-${pad2(now.getHours())}${pad2(now.getMinutes())}`;
   const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement("a");
-  a.href = url; a.download = "korean_ig_ids.csv"; a.click();
+  a.href = url; a.download = `korean_ig_ids_${mode === "all" ? "all" : "batch"}_${list.length}_${stamp}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
